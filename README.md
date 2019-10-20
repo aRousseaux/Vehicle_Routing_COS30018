@@ -1,4 +1,5 @@
 # COS30018 Delivery System
+This will be the final project. Coding standards should be met, largely a refactor of initial project.
 
 ## Group Members
 * Alexander Rousseaux - 102098573
