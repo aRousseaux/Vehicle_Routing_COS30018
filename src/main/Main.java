@@ -2,6 +2,7 @@
 package main;
 
 import controller.Controller;
+import data.DataModel;
 import gui.RoutingFrame;
 
 public class Main 
@@ -15,9 +16,6 @@ public class Main
 
 	public static void main(String[] args)
 	{
-		// create jade controller
-		fController = new Controller();
-		
 		// schedule GUI creation
 		javax.swing.SwingUtilities.invokeLater( new Runnable() 
 		{
@@ -26,5 +24,14 @@ public class Main
 				createAndShowGUI();
 			}
 		});
+		
+		int lNumVehicles = 4;
+		int lNumLocations = 16;
+		int lSeed = 1;
+		int lCapacity = 4;
+		DataModel lDataModel = new DataModel(lNumVehicles, lNumLocations, lSeed, lCapacity);
+		
+		// create jade controller
+		fController = new Controller( lDataModel, "OR-Tools" );
 	}
 }
