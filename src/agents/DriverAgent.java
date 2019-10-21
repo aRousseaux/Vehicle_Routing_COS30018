@@ -55,16 +55,6 @@ public class DriverAgent extends Agent
 					System.out.println(msg.getContent());
 					fLogger.info(msg.getContent());
 
-					if (msg.getContent().contains("GET CAPACITY"))
-					{
-						ACLMessage capacity_response = new ACLMessage(ACLMessage.INFORM);
-						capacity_response.setContent(String.valueOf("Capacity: " + fDataModel.getVehicle(fIdentification).getCapacity()));
-
-						capacity_response.addReceiver(fMasterAgent.getName());
-						send(capacity_response);
-						System.out.print("sent capacity: " + fDataModel.getVehicle(fIdentification).getCapacity() + ", from driver\n");
-					}
-
 					if (msg.getContent().contains("Route: "))
 					{
 						System.out.println(this.getAgent().getLocalName());

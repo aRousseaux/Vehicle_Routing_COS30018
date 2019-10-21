@@ -15,6 +15,7 @@ public class Controller implements Runnable
 {
 	private Thread fThread;
 	private AgentController fDBAgentCtrl;
+	private AgentController fRouteAgentCtrl;
 	
 	public Controller( DataModel aDataModel, String aRoutingMethod )
 	{
@@ -43,8 +44,6 @@ public class Controller implements Runnable
 		// create drivers
 		for ( int i = 0; i < aDataModel.numVehicles(); i++ )
 		{
-			System.out.println("Creating delivery agent number: " + i);
-			
 			//initialize agent
 			AgentController delivery;
 			try 
@@ -62,23 +61,21 @@ public class Controller implements Runnable
 		}
 		
 		// create master
-		System.out.println(Controller.class.getName() + ": Starting up a Master Route Agent...");
-		AgentController lAgentCtrl;
 		try
 		{
 			switch(aRoutingMethod)
 			{
 			case "CHOCO":
 				System.out.print("Creating a CHOCO Master Route Agent...\n");
-				//lAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentCHOCO.class.getName(), new Object[]{fDataModel});
+				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentCHOCO.class.getName(), new Object[]{fDataModel});
 				break;
 			case "OR-Tools":
 				System.out.print("Creating an OR-Tools Master Route Agent...\n");
-				lAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
 			default:
 				System.out.print("Creating a default Master Route Agent...\n");
-				//lAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{fDataModel});
+				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{fDataModel});
 				break;
 			}
 		}
@@ -90,22 +87,22 @@ public class Controller implements Runnable
 
 	public void run() 
 	{
-		while (fThread != null)
+		try 
 		{
-			try 
-			{
-				Thread.sleep(5000);
-				// do stuff (change location, router, etc.)
-			} 
-			catch ( InterruptedException e ) { e.printStackTrace(); }
-		}
-		
-		// ask agent to drop tables
+			// wait for drivers to initialize
+			Thread.sleep(5000);
+			
+			// run solver
+			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
+			lMasterInterface.distributeRoutes();
+		} 
+		catch (StaleProxyException | InterruptedException e) { e.printStackTrace(); }
 	}
 	
 	// delete thread, terminates controller
 	public void shutdown()
 	{
 		fThread = null;
+		// ask agent to drop tables
 	}
 }
