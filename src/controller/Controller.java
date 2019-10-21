@@ -33,7 +33,7 @@ public class Controller implements Runnable
 			(
 				"DBAgent", 
 				DatabaseAgent.class.getName(), 
-				new Object[]{}
+				new Object[]{ aDataModel }
 			);
 			
 			fDBAgentCtrl.start();
@@ -95,6 +95,7 @@ public class Controller implements Runnable
 			try 
 			{
 				Thread.sleep(5000);
+				// do stuff (change location, router, etc.)
 			} 
 			catch ( InterruptedException e ) { e.printStackTrace(); }
 		}

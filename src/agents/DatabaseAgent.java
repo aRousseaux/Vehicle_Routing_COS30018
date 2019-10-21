@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import data.DataModel;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -17,6 +18,7 @@ public class DatabaseAgent extends Agent
 	private static final long serialVersionUID = 1L;
 
 	private Connection fDBConnection;
+	private DataModel fDataModel;
 	
 	private void createTables()
 	{
@@ -39,7 +41,8 @@ public class DatabaseAgent extends Agent
 	
 	protected void setup()
 	{
-		// Object[] lArguments = getArguments();
+		Object[] lArguments = getArguments();
+		fDataModel = (DataModel) lArguments[0];
 		
 		// Connect to Database
 		try
@@ -56,6 +59,16 @@ public class DatabaseAgent extends Agent
 		
 		// generate database
 		createTables();
+		
+		try
+		{
+			for (int i = 0; i < fDataModel.numLocations(); i++)
+			{
+				Statement lLocationStatement = fDBConnection.createStatement();
+				lLocationStatement.executeUpdate("INSERT INTO location_data VALUES (" + i + "," + fDataModel.getLocation(i).x + "," + fDataModel.getLocation(i).y + ")");
+			}
+		}
+		catch ( SQLException e ) { e.printStackTrace(); }
 		
 		// add message receiving behavior
 		addBehaviour(new CyclicBehaviour(this)

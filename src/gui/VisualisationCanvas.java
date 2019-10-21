@@ -67,7 +67,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			try 
 			{
 				// update rate
-				Thread.sleep(500);
+				Thread.sleep(2000);
 			} 
 			catch (InterruptedException e) { e.printStackTrace(); }
 		}
@@ -155,7 +155,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
 		} 
-		catch (SQLException e) { e.printStackTrace(); }
+		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update paths
 		try 
@@ -178,7 +178,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				fPaths.add(lPath);
 			}
 		} 
-		catch (SQLException e) { e.printStackTrace(); }
+		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update driver positions
 		try
@@ -204,6 +204,6 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				fVehicles.add(new Vehicle(PosX, PosY));
 			}
 		}
-		catch (SQLException e) { e.printStackTrace(); }
+		catch (SQLException e) { }//e.printStackTrace(); }
 	}
 }
