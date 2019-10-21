@@ -145,7 +145,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	public void updateData()
 	{
 		// update locations
-		try 
+		try
 		{
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM location_data");
@@ -154,14 +154,14 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			{
 				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
-		} 
+		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update paths
-		try 
+		try
 		{
 			fPaths = new ArrayList<List<Integer>>();
-			
+
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM agent_routes");
 
@@ -177,14 +177,14 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 				fPaths.add(lPath);
 			}
-		} 
+		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update driver positions
 		try
 		{
 			fVehicles = new ArrayList<Vehicle>();
-			
+
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery
 			(

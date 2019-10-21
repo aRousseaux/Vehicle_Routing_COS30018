@@ -78,14 +78,14 @@ public class DatabaseAgent extends Agent
 			public void action() 
 			{
 				ACLMessage lMessage = receive();
-				
+
 				if (lMessage != null)
 				{
 					// driver wanting to update its position
 					if (lMessage.getContent().contains("agent_position"))
 					{
 						DateTimeFormatter lDateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");
-						
+
 						LocalDateTime lNow = LocalDateTime.now();
 						String agent_positions = lMessage.getContent().split("agent_position:")[1];
 						long lPosX = Math.round(Double.valueOf(agent_positions.split(",")[0]));
@@ -94,19 +94,25 @@ public class DatabaseAgent extends Agent
 						addVehiclePosition
 						(
 							Integer.valueOf(lMessage.getSender().getLocalName().replace("Delivery_Agent","")),
-							lPosX, 
-							lPosY, 
+							lPosX,
+							lPosY,
 							lDateFormatter.format(lNow)
 						);
 					}
-					
+
+					if (lMessage.getContent().contains("agent_details"))
+					{
+						String message_string = lMessage.getContent().split("agent_details:")[1];
+						addVehicle(Integer.valueOf(message_string.split(",")[0]), Integer.valueOf(message_string.split(",")[1]));
+					}
+
 					// routing agent wanting to add new route
 					if (lMessage.getContent().contains("agent_routes"))
 					{
 						updateVehicleRoute();
 					}
 				}
-				
+
 				// wait until next message
 				block();
 			}
@@ -129,7 +135,21 @@ public class DatabaseAgent extends Agent
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 	}
-	
+
+	private void addVehicle(int aVehicleNum, int aVehicleCapacity)
+	{
+		try
+		{
+			Statement lStatement = fDBConnection.createStatement();
+			lStatement.executeUpdate
+					(
+					"INSERT INTO agent_data VALUES ("
+							+ aVehicleNum + "," + aVehicleCapacity + ");"
+					);
+		}
+		catch (SQLException e) { e.printStackTrace(); }
+	}
+
 	private void updateVehicleRoute()
 	{
 		try

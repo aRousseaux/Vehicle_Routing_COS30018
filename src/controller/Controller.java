@@ -54,7 +54,7 @@ public class Controller implements Runnable
 					DriverAgent.class.getName(),
 					new Object[]{aDataModel, i}
 				);
-				
+
 				delivery.start();
 			} 
 			catch (StaleProxyException e) {	e.printStackTrace(); }

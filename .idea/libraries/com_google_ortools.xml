@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="com.google.ortools">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../com.google.ortools.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../protobuf.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/.." />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>

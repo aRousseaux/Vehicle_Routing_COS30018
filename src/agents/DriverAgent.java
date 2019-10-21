@@ -50,10 +50,15 @@ public class DriverAgent extends Agent
 			public void action()
 			{
 				ACLMessage msg = receive();
-				if (msg!=null)
+				if (msg != null)
 				{
 					System.out.println(msg.getContent());
 					fLogger.info(msg.getContent());
+
+					ACLMessage message = new ACLMessage(7); // INFORM
+					message.addReceiver(fDBAgent.getName());
+					message.setContent("agent_details:" + fIdentification + "," + fDataModel.getCapacities()[fIdentification]);
+					send(message);
 
 					if (msg.getContent().contains("Route: "))
 					{
@@ -61,7 +66,6 @@ public class DriverAgent extends Agent
 						String array = msg.getContent().split("Route: ")[1];
 						array = array.split("\\[")[1];
 						array = array.split("\\]")[0];
-
 
 						fRoute = Arrays.stream(array.split(", ")).mapToInt(Integer::parseInt).toArray();
 						System.out.println(Arrays.toString(fRoute) + this.myAgent.getLocalName());
@@ -291,7 +295,10 @@ public class DriverAgent extends Agent
 				}
 			}
 		}
-		catch (Exception e) { e.printStackTrace(); }
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public double getPosX(double gradient, double c, double start_x, double start_y, double distance)
