@@ -34,7 +34,7 @@ public class ORToolsRouter extends Agent implements Router
 	//registers interface for the class
 	public ORToolsRouter()
 	{
-		registerO2AInterface(ORToolsRouter.class, this);
+		registerO2AInterface(Router.class, this);
 		
 		selectedAgents = new ArrayList<AMSAgentDescription>();
 	}

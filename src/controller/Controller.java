@@ -67,19 +67,25 @@ public class Controller implements Runnable
 			{
 			case "CHOCO":
 				System.out.print("Creating a CHOCO Master Route Agent...\n");
-				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentCHOCO.class.getName(), new Object[]{fDataModel});
+				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
 				break;
 			case "OR-Tools":
 				System.out.print("Creating an OR-Tools Master Route Agent...\n");
 				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
+			case "ACO":
+				System.out.print("Creating an ACO Master Route Agent...\n");
+				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ACORouter.class.getName(), new Object[]{aDataModel});
+			case "ACO-Partition":
+				System.out.print("Creating an ACO Master Route Agent...\n");
+				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{aDataModel});
 			default:
 				System.out.print("Creating a default Master Route Agent...\n");
-				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{fDataModel});
+				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
 			}
 
-			
+			fRouteAgentCtrl.start();
 		}
 		catch( StaleProxyException e ) { e.printStackTrace(); }
 		
