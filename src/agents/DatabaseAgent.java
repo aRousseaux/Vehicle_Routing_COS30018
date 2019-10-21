@@ -129,4 +129,17 @@ public class DatabaseAgent extends Agent
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 	}
+	
+	public void dropTables()
+	{
+		try 
+		{
+			Statement lDropStatement = fDBConnection.createStatement();
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_positions");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_data");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS location_data");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_routes");
+		} 
+		catch (SQLException e) { e.printStackTrace(); }
+	}
 }

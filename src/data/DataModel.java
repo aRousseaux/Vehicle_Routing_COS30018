@@ -67,6 +67,18 @@ public class DataModel
 		}
 	}
 	
+	public int[] getCapacities()
+	{
+		int[] lCapacities = new int[ numVehicles() ];
+		
+		for ( int i = 0; i < numVehicles(); i++ )
+		{
+			lCapacities[i] = getVehicle(i).getCapacity();
+		}
+		
+		return lCapacities;
+	}
+	
 	public int[][] getDistanceMatrix()
 	{
 		return fDistanceMatrix;

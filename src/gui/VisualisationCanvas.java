@@ -61,8 +61,8 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	{
 		while( fThread != null )
 		{
-			repaint();
 			updateData();
+			repaint();
 			
 			try 
 			{
