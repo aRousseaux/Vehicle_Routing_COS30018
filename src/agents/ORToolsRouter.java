@@ -26,6 +26,11 @@ public class ORToolsRouter extends Agent implements Router
 	private DataModel fDataModel;
 	private ArrayList<AMSAgentDescription> selectedAgents;
 	
+	static
+	{
+		System.loadLibrary("jniortools");
+	}
+	
 	//registers interface for the class
 	public ORToolsRouter()
 	{
