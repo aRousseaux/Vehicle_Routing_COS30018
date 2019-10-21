@@ -143,7 +143,7 @@ public class DatabaseAgent extends Agent
 		catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void dropTables()
+	protected void takeDown()
 	{
 		try 
 		{

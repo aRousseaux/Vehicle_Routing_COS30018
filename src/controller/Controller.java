@@ -19,6 +19,9 @@ public class Controller implements Runnable
 	
 	public Controller( DataModel aDataModel, String aRoutingMethod )
 	{
+		// initialize thread
+		fThread = new Thread(this);
+		
 		// get a hold to the JADE runtime
 		Runtime rt = Runtime.instance();
 		
@@ -78,10 +81,15 @@ public class Controller implements Runnable
 				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{fDataModel});
 				break;
 			}
+			
+			fThread.wait(2000);
+			// run solver
+			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
+			lMasterInterface.distributeRoutes();
 		}
-		catch( StaleProxyException e ) { e.printStackTrace(); }
+		catch( StaleProxyException | InterruptedException e ) { e.printStackTrace(); }
 		
-		fThread = new Thread(this);
+		
 		fThread.start();
 	}
 
@@ -91,12 +99,9 @@ public class Controller implements Runnable
 		{
 			// wait for drivers to initialize
 			Thread.sleep(5000);
-			
-			// run solver
-			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
-			lMasterInterface.distributeRoutes();
+			System.out.println("Controller is still running");
 		} 
-		catch (StaleProxyException | InterruptedException e) { e.printStackTrace(); }
+		catch ( InterruptedException e ) { e.printStackTrace(); }
 	}
 	
 	// delete thread, terminates controller
