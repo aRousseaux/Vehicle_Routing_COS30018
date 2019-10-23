@@ -14,6 +14,7 @@ import jade.wrapper.StaleProxyException;
 public class Controller implements Runnable
 {
 	private Thread fThread;
+	private ContainerController fContainerCtrl;
 	private AgentController fDBAgentCtrl;
 	private AgentController fRouteAgentCtrl;
 	
@@ -25,12 +26,12 @@ public class Controller implements Runnable
 		// launch the main container listening on port 8888
 		Profile pMain = new ProfileImpl(null, 8888, null);
 		pMain.setParameter(Profile.GUI, "true");
-		ContainerController lMainCtrl = rt.createMainContainer(pMain);
+		fContainerCtrl = rt.createMainContainer(pMain);
 		
 		// create database agent
 		try 
 		{
-			fDBAgentCtrl = lMainCtrl.createNewAgent
+			fDBAgentCtrl = fContainerCtrl.createNewAgent
 			(
 				"DBAgent", 
 				DatabaseAgent.class.getName(), 
@@ -48,7 +49,7 @@ public class Controller implements Runnable
 			AgentController delivery;
 			try 
 			{
-				delivery = lMainCtrl.createNewAgent
+				delivery = fContainerCtrl.createNewAgent
 				(
 					"Delivery_Agent" + i,
 					DriverAgent.class.getName(),
@@ -67,22 +68,22 @@ public class Controller implements Runnable
 			{
 			case "CHOCO":
 				System.out.print("Creating a CHOCO Master Route Agent...\n");
-				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
 				break;
 			case "OR-Tools":
 				System.out.print("Creating an OR-Tools Master Route Agent...\n");
-				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{aDataModel});
 				break;
 			case "ACO":
 				System.out.print("Creating an ACO Master Route Agent...\n");
-				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ACORouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACORouter.class.getName(), new Object[]{aDataModel});
 			case "ACO-Partition":
 				System.out.print("Creating an ACO Master Route Agent...\n");
-				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{aDataModel});
 			default:
 				System.out.print("Creating a default Master Route Agent...\n");
-				fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
 			}
 
@@ -112,8 +113,9 @@ public class Controller implements Runnable
 	}
 	
 	// delete thread, terminates controller
-	public void shutdown()
+	public void shutdown() throws StaleProxyException
 	{
+		fContainerCtrl.kill();
 		fThread = null;
 	}
 }

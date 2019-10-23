@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import controller.Controller;
 import data.DataModel;
+import jade.wrapper.StaleProxyException;
 
 public class RoutingFrame extends JFrame
 {
@@ -50,13 +51,13 @@ public class RoutingFrame extends JFrame
 		pack();
 	}
 	
-	public void onSubmit( DataModel aDataModel, String aMethod )
+	public void onSubmit( DataModel aDataModel, String aMethod ) throws StaleProxyException
 	{
 		if (fController != null)
 		{
 			fController.shutdown();
 		}
 		
-		fController = new Controller( aDataModel, "OR-Tools" );
+		fController = new Controller( aDataModel, aMethod );
 	}
 }
