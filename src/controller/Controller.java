@@ -102,9 +102,16 @@ public class Controller implements Runnable
 			// wait for drivers to initialize
 			Thread.sleep(2000);
 			
-			// run solver
+			// grab interface
 			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
+			
+			long lStart = System.currentTimeMillis();
+			
+			// solve and distribute routes
 			lMasterInterface.distributeRoutes();
+			
+			long lFinish = System.currentTimeMillis();
+			System.out.println("Time taken to route: " + (lFinish - lStart) + " milliseconds.");
 		} 
 		catch ( InterruptedException | StaleProxyException e ) { e.printStackTrace(); }
 	}

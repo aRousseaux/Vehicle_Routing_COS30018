@@ -1,5 +1,7 @@
+
 package agents;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -67,6 +69,16 @@ public abstract class GenericRouter extends Agent implements Router
 					message.setContent("Route: " + Arrays.toString(lSolution[i]));
 					send(message);
 					break;
+				}
+			}
+			
+			for (int j = 0; j < selectedAgents.size(); j++)
+			{
+				if (selectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j + 1)))
+				{
+					message.addReceiver(selectedAgents.get(i).getName());
+					message.setContent("agent_routes:" + i + " " +Arrays.toString(lSolution[i]).trim() + " " + calculateRouteLength(lSolution[i], fDataModel) );
+					send(message);
 				}
 			}
 		}

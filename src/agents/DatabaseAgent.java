@@ -109,7 +109,9 @@ public class DatabaseAgent extends Agent
 					// routing agent wanting to add new route
 					if (lMessage.getContent().contains("agent_routes"))
 					{
-						addRoute(0, "test", 0);
+						String message_string = lMessage.getContent().split("agent_details:")[1];
+						String[] lMessageArray = message_string.split(" ");
+						addRoute(Integer.parseInt(lMessageArray[0]), lMessageArray[1].substring(0, lMessageArray[1].length() - 1), Integer.parseInt(lMessageArray[2]));
 					}
 				}
 
