@@ -105,8 +105,6 @@ public class Controller implements Runnable
 			// run solver
 			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
 			lMasterInterface.distributeRoutes();
-			
-			System.out.println("Controller has ran");
 		} 
 		catch ( InterruptedException | StaleProxyException e ) { e.printStackTrace(); }
 	}
