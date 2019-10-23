@@ -10,13 +10,16 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import data.DataModel;
+
 public class EditorForm extends JPanel
 {
 private static final long serialVersionUID = 1L;
 	
 	private TextField fLocations;
-	private TextField fCapacity;
 	private TextField fVehicles;
+	private TextField fCapacity;
+	private TextField fSeed;
 	private JComboBox<String> fRoutingMethods;
 	private JButton fSubmit;
 	
@@ -70,6 +73,19 @@ private static final long serialVersionUID = 1L;
 		lConstraints.gridy = 3;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
+		this.add(new JLabel("Seed:"), lConstraints);
+		
+		fSeed = new TextField();
+		lConstraints.gridx = 1;
+		lConstraints.gridy = 3;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(fSeed, lConstraints);
+		
+		lConstraints.gridx = 0;
+		lConstraints.gridy = 4;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
 		this.add(new JLabel("Method:"), lConstraints);
 
 		fRoutingMethods = new JComboBox<String>(new String[] 
@@ -80,14 +96,14 @@ private static final long serialVersionUID = 1L;
 			"ACO-Partition"
 		});
 		lConstraints.gridx = 1;
-		lConstraints.gridy = 3;
+		lConstraints.gridy = 4;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fRoutingMethods, lConstraints);
 
 		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
-		lConstraints.gridy = 4;
+		lConstraints.gridy = 5;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fSubmit.addActionListener( e -> onSubmit( aRoutingFrame ) );
@@ -96,6 +112,17 @@ private static final long serialVersionUID = 1L;
 
 	private void onSubmit( RoutingFrame aRoutingFrame ) 
 	{
-		aRoutingFrame.onSubmission();
+		try
+		{
+			DataModel lDataModel = new DataModel
+			(
+				Integer.parseInt(fVehicles.getText()), 
+				Integer.parseInt(fLocations.getText()), 
+				Integer.parseInt(fSeed.getText()), 
+				Integer.parseInt(fCapacity.getText())
+			);
+			aRoutingFrame.onSubmit( lDataModel, (String) fRoutingMethods.getSelectedItem() );
+		}
+		catch (Exception e) { e.printStackTrace(); }
 	}
 }

@@ -6,12 +6,16 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 
+import controller.Controller;
+import data.DataModel;
+
 public class RoutingFrame extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
 	private VisualisationCanvas fVisualisation; // canvas for drawing database data
-	private EditorForm fForm;   // Initialization form
+	private EditorForm fForm;   // initialization form
+	private Controller fController; // agent controller
 	
 	public RoutingFrame(String aTitle)
 	{
@@ -46,8 +50,13 @@ public class RoutingFrame extends JFrame
 		pack();
 	}
 	
-	public void onSubmission()
+	public void onSubmit( DataModel aDataModel, String aMethod )
 	{
-		// possibly do stuff might change
+		if (fController != null)
+		{
+			fController.shutdown();
+		}
+		
+		fController = new Controller( aDataModel, "OR-Tools" );
 	}
 }
