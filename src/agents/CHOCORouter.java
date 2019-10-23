@@ -2,21 +2,24 @@
 package agents;
 
 import data.DataModel;
-import jade.core.Agent;
+import jade.domain.FIPAAgentManagement.AMSAgentDescription;
+
+import java.util.ArrayList;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
-public class CHOCORouter extends Agent implements Router
+public class CHOCORouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
-	private DataModel fDataModel;
 
 	public CHOCORouter()
 	{
 		registerO2AInterface(Router.class, this);
+		
+		selectedAgents = new ArrayList<AMSAgentDescription>();
 	}
 	
 	protected void setup()
@@ -227,20 +230,5 @@ public class CHOCORouter extends Agent implements Router
 		model.binPacking(input_var, matrix_location, return_value, 0).post();
 
 		return return_value[i];
-	}
-
-	public void findDrivers() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void distributeRoutes() 
-	{
-		solveRoute( fDataModel, 10000 );
-	}
-
-	public int calculateRouteLength(int[] aLocations, DataModel aDataModel) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

@@ -15,5 +15,5 @@ public interface Router
 		public abstract void distributeRoutes();
 		
 		// calculates a route length
-		public abstract int calculateRouteLength(int[] aLocations, DataModel aDataModel);
+		public abstract int calculateRouteLength(int[] aRoute, DataModel aDataModel);
 }
