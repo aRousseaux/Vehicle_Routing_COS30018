@@ -203,5 +203,4 @@ public class ORToolsRouter extends Agent implements Router
 
 		return lRouteLength;
 	}
-	
 }

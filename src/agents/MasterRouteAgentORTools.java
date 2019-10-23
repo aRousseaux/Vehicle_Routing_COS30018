@@ -226,6 +226,7 @@ public class MasterRouteAgentORTools extends Agent implements Router
 
 			try 
 			{
+				System.out.println("uploading route");
 				Statement stmt = fDBConnection.createStatement();
 				stmt.executeUpdate("INSERT INTO agent_routes VALUES (" + i + ", '" + lRouteString + "', " + calculateRouteLength(return_multi_dimensional_array[i], aDataModel) + ");");
 			}
@@ -254,7 +255,7 @@ public class MasterRouteAgentORTools extends Agent implements Router
 	{
 		System.out.print("Master Routing agent is distributing routes\n");
 		AMSAgentDescription[] fAgents;
-
+		
 		SearchConstraints sc = new SearchConstraints();
 		sc.setMaxResults(Long.valueOf(-1)); // not sure of the default value, but this ensures you get them all.
 
@@ -303,8 +304,10 @@ public class MasterRouteAgentORTools extends Agent implements Router
 
 						if (fNumberOfResponses == vehicle_capacities.length)
 						{
+							System.out.println("Running Solver");
 							int[][] vehicle_routes = solveRoute(fDataModel, 1000000);
 							sendVehicleRoutes(vehicle_routes);
+							System.out.println("Sent solution");
 						}
 					}
 
