@@ -34,6 +34,7 @@ public class DatabaseAgent extends Agent
 			stmt.executeUpdate("DELETE FROM Agent_Positions");
 			stmt.executeUpdate("DELETE FROM agent_routes");
 			stmt.executeUpdate("DELETE FROM location_data");
+			stmt.executeUpdate("DELETE FROM agent_data");
 
 		}
 		catch(Exception e) { e.printStackTrace(); }

@@ -86,7 +86,7 @@ public class DriverAgent extends Agent
 
 					}
 				}
-				//block();
+				block();
 			}
 		});
 		
@@ -270,6 +270,7 @@ public class DriverAgent extends Agent
 					send(message);
 				}
 			}
+
 		});
 	}
 	
