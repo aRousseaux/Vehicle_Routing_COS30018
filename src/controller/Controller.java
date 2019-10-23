@@ -73,7 +73,6 @@ public class Controller implements Runnable
 			case "OR-Tools":
 				System.out.print("Creating an OR-Tools Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
-				//fRouteAgentCtrl = lMainCtrl.createNewAgent("MasterRouteAgent", MasterRouteAgentORTools.class.getName(), new Object[]{aDataModel});
 				break;
 			case "ACO":
 				System.out.print("Creating an ACO Master Route Agent...\n");

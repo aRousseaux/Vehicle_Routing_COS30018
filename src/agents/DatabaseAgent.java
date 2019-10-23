@@ -109,7 +109,7 @@ public class DatabaseAgent extends Agent
 					// routing agent wanting to add new route
 					if (lMessage.getContent().contains("agent_routes"))
 					{
-						updateVehicleRoute();
+						addRoute(0, "test", 0);
 					}
 				}
 
@@ -150,17 +150,14 @@ public class DatabaseAgent extends Agent
 		catch (SQLException e) { e.printStackTrace(); }
 	}
 
-	private void updateVehicleRoute()
+	private void addRoute(int aID, String aRouteString, int aRouteLength)
 	{
-		try
+		try 
 		{
-			Statement lStatement = fDBConnection.createStatement();
-			lStatement.executeUpdate
-			(
-				""
-			);
+			Statement stmt = fDBConnection.createStatement();
+			stmt.executeUpdate("INSERT INTO agent_routes VALUES (" + aID + ", '" + aRouteString + "', " + aRouteLength + ");");
 		}
-		catch (SQLException e) { e.printStackTrace(); }
+		catch ( SQLException e ) { e.printStackTrace(); }
 	}
 	
 	protected void takeDown()
