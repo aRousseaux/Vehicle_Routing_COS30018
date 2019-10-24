@@ -1,10 +1,7 @@
 
 package agents;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,6 +9,8 @@ import data.DataModel;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import org.chocosolver.solver.constraints.nary.nvalue.amnv.rules.R;
+import org.chocosolver.util.tools.ArrayUtils;
 
 public class DatabaseAgent extends Agent
 {
@@ -29,7 +28,7 @@ public class DatabaseAgent extends Agent
 			stmt.execute("CREATE TABLE IF NOT EXISTS agent_data(Agent_ID INT, Agent_Capacity INT, PRIMARY KEY (Agent_ID));");
 			stmt.execute("CREATE TABLE IF NOT EXISTS location_data(Location_ID INT, Pos_X INT, Pos_Y INT, PRIMARY KEY (Location_ID));");
 			stmt.execute("CREATE TABLE IF NOT EXISTS agent_positions(Agent_ID INT, Pos_X INT, Pos_Y INT, Agent_Time VARCHAR(256), FOREIGN KEY (Agent_ID) REFERENCES agent_data(Agent_ID));");
-			stmt.execute("CREATE TABLE IF NOT EXISTS agent_routes(Route_ID INT, Route VARCHAR(1000), Route_Length INT);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS agent_routes(Agent_ID INT, Route_Position INT, Location_ID INT, FOREIGN KEY (Agent_ID) REFERENCES agent_data(Agent_ID), FOREIGN KEY (Location_ID) REFERENCES location_data(Location_ID));");
 
 			stmt.executeUpdate("DELETE FROM Agent_Positions");
 			stmt.executeUpdate("DELETE FROM agent_routes");
@@ -110,9 +109,17 @@ public class DatabaseAgent extends Agent
 					// routing agent wanting to add new route
 					if (lMessage.getContent().contains("agent_routes"))
 					{
-						String message_string = lMessage.getContent().split("agent_details:")[1];
-						String[] lMessageArray = message_string.split(" ");
-						addRoute(Integer.parseInt(lMessageArray[0]), lMessageArray[1].substring(0, lMessageArray[1].length() - 1), Integer.parseInt(lMessageArray[2]));
+						System.out.println(lMessage.getContent());
+						String message_string = lMessage.getContent().split("agent_routes:")[1].trim();
+
+						message_string = message_string.replace("[", "").replace("]", "");
+						String[] locations = message_string.split(",");
+						for (int i = 0; i < locations.length; i++)
+						{
+							addRoute(Integer.valueOf(lMessage.getSender().getLocalName().split("Delivery_Agent")[1].trim()), i, Integer.valueOf(locations[i].trim()));
+
+							System.out.println(Integer.valueOf(locations[i].trim()));
+						}
 					}
 				}
 
@@ -153,14 +160,16 @@ public class DatabaseAgent extends Agent
 		catch (SQLException e) { e.printStackTrace(); }
 	}
 
-	private void addRoute(int aID, String aRouteString, int aRouteLength)
+	private void addRoute(Integer aID, Integer index, Integer  iLocation)
 	{
-		try 
+		try
 		{
 			Statement stmt = fDBConnection.createStatement();
-			stmt.executeUpdate("INSERT INTO agent_routes VALUES (" + aID + ", '" + aRouteString + "', " + aRouteLength + ");");
+			stmt.executeUpdate("INSERT INTO agent_routes VALUES (" + aID + ", '" + index + "', " + iLocation + ");");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		catch ( SQLException e ) { e.printStackTrace(); }
+
 	}
 	
 	protected void takeDown()

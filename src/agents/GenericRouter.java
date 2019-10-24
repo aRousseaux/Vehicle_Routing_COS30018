@@ -78,6 +78,7 @@ public abstract class GenericRouter extends Agent implements Router
 				{
 					message.addReceiver(selectedAgents.get(i).getName());
 					message.setContent("agent_routes:" + i + " " +Arrays.toString(lSolution[i]).trim() + " " + calculateRouteLength(lSolution[i], fDataModel) );
+					System.out.println("send routes");
 					send(message);
 				}
 			}
