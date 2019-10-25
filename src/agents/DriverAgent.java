@@ -256,7 +256,11 @@ public class DriverAgent extends Agent
 							return;
 						}
 					}
+
+					block();
 				}
+
+				block();
 			}
 		});
 		
@@ -272,8 +276,10 @@ public class DriverAgent extends Agent
 					ACLMessage message = new ACLMessage(7); // INFORM
 					message.addReceiver(fDBAgent.getName());
 					message.setContent("agent_position:" + String.valueOf(fPosition.x) + "," + String.valueOf(fPosition.y));
-					send(message);
+					//send(message);
 				}
+
+				block();
 			}
 
 		});

@@ -32,12 +32,12 @@ public class CHOCORouter extends GenericRouter
 		// Model
 		Model lModel = new Model("Vehicle Routing Problem");
 
-		IntVar[][] vehicle_locations = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.getDistanceMatrix().length, 0, (aDataModel.getDistanceMatrix().length - 1));
-		IntVar[][] vehicle_routes = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.getDistanceMatrix().length, 0, (aDataModel.getDistanceMatrix().length - 1));
-		IntVar[][] route_lengths = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.getDistanceMatrix().length, 0, 9999);
+		IntVar[][] vehicle_locations = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
+		IntVar[][] vehicle_routes = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
+		IntVar[][] route_lengths = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, 9999);
 		IntVar total_length = lModel.intVar(0, 9999);
 
-		IntVar[][] lVehiclePackages = lModel.intVarMatrix(aDataModel.getDistanceMatrix().length, aDataModel.numVehicles(), 0, 1);
+		IntVar[][] lVehiclePackages = lModel.intVarMatrix(aDataModel.numLocations(), aDataModel.numVehicles(), 0, 1);
 
 		for (int i = 0; i < lVehiclePackages.length; i++)
 		{
@@ -75,9 +75,7 @@ public class CHOCORouter extends GenericRouter
 					lModel.ifThen(lModel.element(lModel.intVar(j), vehicle_routes[i], lModel.intVar(k), 0), lModel.arithm(route_lengths[i][k], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
 
 					lModel.not(lModel.and(lModel.element(vehicle_routes[i][j], vehicle_locations[i], lModel.intVar(k), 0), lModel.arithm(vehicle_routes[i][k], "=", j))).post();
-
 				}
-
 			}
 
 			lModel.sum(MatrixToArray(route_lengths), "=", total_length).post();
@@ -114,55 +112,9 @@ public class CHOCORouter extends GenericRouter
 			// no solution
 		}
 
-		for (int i = 0; i < vehicle_locations.length; i++)
-		{
-			for (int j = 0; j < vehicle_locations[i].length; j++)
-			{
-				System.out.print(vehicle_locations[i][j].getValue() + ", ");
-			}
-			System.out.println();
-		}
-
-		System.out.println();
-
-		for (int i = 0; i < vehicle_routes.length; i++)
-		{
-			for (int j = 0; j < vehicle_routes[i].length; j++)
-			{
-				System.out.print(vehicle_routes[i][j].getValue() + ", ");
-			}
-			System.out.println();
-		}
-
-		System.out.println();
-
-		System.out.println("Distances:");
-		for (int i = 0; i < route_lengths.length; i++)
-		{
-			for (int j = 0; j < route_lengths[i].length; j++)
-			{
-				System.out.print(route_lengths[i][j].getValue() + ", ");
-			}
-			System.out.println();
-		}
-
-		System.out.println();
-
-		System.out.println("Distance Matrix:");
-		for (int i = 0; i < aDataModel.numLocations(); i++)
-		{
-			for (int j = 0; j < aDataModel.numLocations(); j++)
-			{
-				System.out.print(aDataModel.getDistanceMatrix()[i][j] + ", ");
-			}
-			System.out.println();
-		}
-
-		System.out.println("Final Distances:");
-
 		int[][] return_routes = new int[aDataModel.numVehicles()][];
 
-		for (int i = 0; i < vehicle_routes.length; i++)
+		for (int i = 0; i < aDataModel.numVehicles(); i++)
 		{
 			String route_string = "";
 
@@ -191,7 +143,7 @@ public class CHOCORouter extends GenericRouter
 				return_routes[i][k] = Integer.valueOf(route_string.split(",")[k].trim());
 			}
 
-			System.out.println(route_string);
+			System.out.println("Route OUT: " + route_string);
 		}
 
 		return return_routes;
