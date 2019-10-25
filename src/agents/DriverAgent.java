@@ -13,7 +13,6 @@ import jade.domain.AMSService;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.lang.acl.ACLMessage;
-import jade.tools.sniffer.Message;
 
 public class DriverAgent extends Agent 
 {
@@ -79,10 +78,10 @@ public class DriverAgent extends Agent
 						}
 
 						ACLMessage forward = new ACLMessage(ACLMessage.INFORM);
-						message.addReceiver(fDBAgent.getName());
-						message.setContent("agent_routes: " + msg.getContent().replace("Route: ", "").trim());
+						forward.addReceiver(fDBAgent.getName());
+						forward.setContent("agent_routes: " + msg.getContent().replace("Route: ", "").trim());
 						System.out.println("send routes");
-						send(message);
+						send(forward);
 					}
 
 					//continue current path
