@@ -257,6 +257,8 @@ public class DriverAgent extends Agent
 						}
 					}
 				}
+
+				block();
 			}
 		});
 		
@@ -274,6 +276,8 @@ public class DriverAgent extends Agent
 					message.setContent("agent_position:" + String.valueOf(fPosition.x) + "," + String.valueOf(fPosition.y));
 					send(message);
 				}
+
+				block();
 			}
 
 		});
