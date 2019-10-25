@@ -9,8 +9,6 @@ import data.DataModel;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-import org.chocosolver.solver.constraints.nary.nvalue.amnv.rules.R;
-import org.chocosolver.util.tools.ArrayUtils;
 
 public class DatabaseAgent extends Agent
 {
@@ -177,10 +175,10 @@ public class DatabaseAgent extends Agent
 		try 
 		{
 			Statement lDropStatement = fDBConnection.createStatement();
-			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_positions");
-			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_data");
-			lDropStatement.executeUpdate("DROP TABLE IF EXISTS location_data");
 			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_routes");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_positions");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS location_data");
+			lDropStatement.executeUpdate("DROP TABLE IF EXISTS agent_data");
 		} 
 		catch (SQLException e) { e.printStackTrace(); }
 	}

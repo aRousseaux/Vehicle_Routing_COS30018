@@ -17,7 +17,8 @@ public class RoutingFrame extends JFrame
 	private VisualisationCanvas fVisualisation; // canvas for drawing database data
 	private EditorForm fForm;   // initialization form
 	private Controller fController; // agent controller
-	
+	private DeliveryInformation fInformation; // Information panel
+
 	public RoutingFrame(String aTitle)
 	{
 		super(aTitle);
@@ -46,6 +47,13 @@ public class RoutingFrame extends JFrame
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		add( fForm, lConstraints );
+
+		fInformation = new DeliveryInformation();
+		lConstraints.gridx = 1;
+		lConstraints.gridy = 1;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		add( fInformation, lConstraints );
 		
 		// resize window to fit all
 		pack();
@@ -59,5 +67,6 @@ public class RoutingFrame extends JFrame
 		}
 		
 		fController = new Controller( aDataModel, aMethod );
+		
 	}
 }

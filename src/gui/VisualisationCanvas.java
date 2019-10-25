@@ -67,7 +67,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			try 
 			{
 				// update rate
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} 
 			catch (InterruptedException e) { e.printStackTrace(); }
 		}
@@ -150,17 +150,27 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM location_data");
 
+			//fLocations = null;
+			//fLocations = new ArrayList<Location>();
+
 			while (lLocationResult.next())
 			{
 				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
+
+			lLocationResult = null;
+			lLocationStatement = null;
 		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update paths
+
+
+
 		try
 		{
-			fPaths = new ArrayList<List<Integer>>();
+			//fPaths = null;
+			//fPaths = new ArrayList<List<Integer>>();
 
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM agent_routes");
@@ -177,13 +187,17 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 				fPaths.add(lPath);
 			}
+
+			//lLocationResult = null;
+			//lLocationStatement = null;
 		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update driver positions
 		try
 		{
-			fVehicles = new ArrayList<Vehicle>();
+			//fVehicles = null;
+			//fVehicles = new ArrayList<Vehicle>();
 
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery
@@ -203,7 +217,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 				fVehicles.add(new Vehicle(PosX, PosY));
 			}
+
+			//lLocationResult = null;
+			//lLocationStatement = null;
 		}
 		catch (SQLException e) { }//e.printStackTrace(); }
+
 	}
 }
