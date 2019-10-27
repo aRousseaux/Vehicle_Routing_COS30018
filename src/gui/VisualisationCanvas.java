@@ -170,6 +170,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		
 		// draw final image to the screen
 		g.drawImage( lBuffer, 0, 0, null );
+		gg.dispose();
 	}
 	
 	public void updateLocations()
