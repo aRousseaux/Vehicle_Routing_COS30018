@@ -193,7 +193,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			for ( int i = 0; i < fVehicles.size(); i++)
 			{
 				Statement lRouteStatement = fDBConnection.createStatement();
-				ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes ORDER BY Agent_ID ASC, Route_Position ASC");
+				ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes WHERE Agent_ID = "+i+" ORDER BY Agent_ID ASC, Route_Position ASC");
 				
 				List<Integer> lPath = new ArrayList<Integer>();
 				while (lRouteResult.next())
@@ -203,17 +203,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				
 				fPaths.add(lPath);
 			}
-			
-			//Statement lRouteStatement = fDBConnection.createStatement();
-			//ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes ORDER BY Agent_ID ASC, Route_Position ASC");
-
-			/*while (lRouteResult.next())
-			{
-				int lLocationID = lRouteResult.getInt("Location_ID");
-				int lAgentID = lRouteResult.getInt("Agent_ID");
-				int lRoutePosition = lRouteResult.getInt("Route_Position");
-			}*/
 		}
-		catch (SQLException e) { }//e.printStackTrace(); }
+		catch (SQLException e) { e.printStackTrace(); }
 	}
 }
