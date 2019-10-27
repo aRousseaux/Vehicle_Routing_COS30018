@@ -16,7 +16,7 @@ public abstract class GenericRouter extends Agent implements Router
 	private static final long serialVersionUID = 1L;
 
 	protected DataModel fDataModel;
-	protected ArrayList<AMSAgentDescription> selectedAgents;
+	protected ArrayList<AMSAgentDescription> fSelectedAgents;
 	
 	public abstract int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance);
 	
@@ -46,7 +46,7 @@ public abstract class GenericRouter extends Agent implements Router
 			{
 				if (lAgents[i].getName().toString().contains("Delivery_Agent"))
 				{
-					selectedAgents.add(lAgents[i]);
+					fSelectedAgents.add(lAgents[i]);
 				}
 			}
 		}
@@ -59,22 +59,22 @@ public abstract class GenericRouter extends Agent implements Router
 			System.out.println("Solution to be sent: " + Arrays.toString(lSolution[i]));
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 
-			for (int j = 0; j < selectedAgents.size(); j++)
+			for (int j = 0; j < fSelectedAgents.size(); j++)
 			{
-				if (selectedAgents.get(i).getName().getLocalName().contains("Delivery_Agent" + String.valueOf(j)))
+				if (fSelectedAgents.get(i).getName().getLocalName().contains("Delivery_Agent" + String.valueOf(j)))
 				{
-					message.addReceiver(selectedAgents.get(i).getName());
+					message.addReceiver(fSelectedAgents.get(i).getName());
 					message.setContent("Route: " + Arrays.toString(lSolution[i]));
 					send(message);
 					break;
 				}
 			}
 			
-			for (int j = 0; j < selectedAgents.size(); j++)
+			for (int j = 0; j < fSelectedAgents.size(); j++)
 			{
-				if (selectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j)))
+				if (fSelectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j)))
 				{
-					message.addReceiver(selectedAgents.get(i).getName());
+					message.addReceiver(fSelectedAgents.get(i).getName());
 					message.setContent("agent_routes:" + i + " " +Arrays.toString(lSolution[i]).trim() + " " + calculateRouteLength(lSolution[i], fDataModel) );
 					send(message);
 				}

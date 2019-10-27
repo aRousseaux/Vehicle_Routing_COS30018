@@ -29,7 +29,7 @@ public class ORToolsRouter extends GenericRouter
 	{
 		registerO2AInterface(Router.class, this);
 		
-		selectedAgents = new ArrayList<AMSAgentDescription>();
+		fSelectedAgents = new ArrayList<AMSAgentDescription>();
 	}
 	
 	protected void setup()
