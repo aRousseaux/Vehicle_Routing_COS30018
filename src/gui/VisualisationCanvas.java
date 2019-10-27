@@ -26,8 +26,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	private Thread fThread;
 	private Connection fDBConnection; // connection to database
 	private List<Location> fLocations;
+	private double fLocationChecksum;
 	private List<Vehicle> fVehicles;
+	private double fVehiclesChecksum;
 	private List<List<Integer>> fPaths; // list of paths referencing location id
+	private double fPathsChecksum;
 	
 	public VisualisationCanvas()
 	{
@@ -61,15 +64,42 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	{
 		while( fThread != null )
 		{
-			updateData();
-			repaint();
-			
 			try 
 			{
 				// update rate
-				Thread.sleep(1000);
+				Thread.sleep(2000);
+				
+				Statement lLocationStatement = fDBConnection.createStatement();
+				ResultSet lLocationResult;
+				
+				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE location_data;");
+				lLocationResult.next();
+				if (fLocationChecksum != lLocationResult.getDouble("Checksum"))
+				{
+					fLocationChecksum = lLocationResult.getDouble("Checksum");
+					updateLocations();
+				}
+				
+				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE agent_positions;");
+				lLocationResult.next();
+				if (fVehiclesChecksum != lLocationResult.getDouble("Checksum"))
+				{
+					fVehiclesChecksum = lLocationResult.getDouble("Checksum");
+					updateVehicles();
+				}
+				
+				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE agent_routes;");
+				lLocationResult.next();
+				if (fPathsChecksum != lLocationResult.getDouble("Checksum"))
+				{
+					fPathsChecksum = lLocationResult.getDouble("Checksum");
+					updatePaths();
+				}
 			} 
-			catch (InterruptedException e) { e.printStackTrace(); }
+			catch (InterruptedException e) { e.printStackTrace(); } 
+			catch (SQLException e) { e.printStackTrace(); }
+			
+			repaint();
 		}
 	}
 	
@@ -142,7 +172,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		g.drawImage( lBuffer, 0, 0, null );
 	}
 	
-	public void updateData()
+	public void updateLocations()
 	{
 		// update locations
 		try
@@ -157,8 +187,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
 		}
-		catch (SQLException e) { }//e.printStackTrace(); }
-
+		catch (SQLException e) { e.printStackTrace(); }
+	}
+	
+	public void updateVehicles()
+	{
 		// update driver positions
 		try
 		{
@@ -183,8 +216,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				fVehicles.add(new Vehicle(PosX, PosY));
 			}
 		}
-		catch (SQLException e) { }//e.printStackTrace(); }
-
+		catch (SQLException e) { e.printStackTrace(); }
+	}
+	
+	public void updatePaths()
+	{
 		// update paths
 		try
 		{
