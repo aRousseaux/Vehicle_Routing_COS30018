@@ -27,7 +27,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	private Connection fDBConnection; // connection to database
 	private List<Location> fLocations;
 	private List<Vehicle> fVehicles;
-	private List<List<Integer>> fPaths;
+	private List<List<Integer>> fPaths; // list of paths referencing location id
 	
 	public VisualisationCanvas()
 	{
@@ -150,54 +150,19 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM location_data");
 
-			//fLocations = null;
-			//fLocations = new ArrayList<Location>();
+			fLocations = new ArrayList<Location>();
 
 			while (lLocationResult.next())
 			{
 				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
-
-			lLocationResult = null;
-			lLocationStatement = null;
-		}
-		catch (SQLException e) { }//e.printStackTrace(); }
-
-		// update paths
-
-
-
-		try
-		{
-			//fPaths = null;
-			//fPaths = new ArrayList<List<Integer>>();
-
-			Statement lLocationStatement = fDBConnection.createStatement();
-			ResultSet lLocationResult = lLocationStatement.executeQuery("SELECT * FROM agent_routes");
-
-			while (lLocationResult.next())
-			{
-				String[] lResult = lLocationResult.getString("Route").split(" ");
-
-				List<Integer> lPath = new ArrayList<Integer>();
-				for (int i = 0; i < lResult.length; i++)
-				{
-					lPath.add(Integer.parseInt(lResult[i]));
-				}
-
-				fPaths.add(lPath);
-			}
-
-			//lLocationResult = null;
-			//lLocationStatement = null;
 		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
 		// update driver positions
 		try
 		{
-			//fVehicles = null;
-			//fVehicles = new ArrayList<Vehicle>();
+			fVehicles = new ArrayList<Vehicle>();
 
 			Statement lLocationStatement = fDBConnection.createStatement();
 			ResultSet lLocationResult = lLocationStatement.executeQuery
@@ -217,11 +182,38 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 				fVehicles.add(new Vehicle(PosX, PosY));
 			}
-
-			//lLocationResult = null;
-			//lLocationStatement = null;
 		}
 		catch (SQLException e) { }//e.printStackTrace(); }
 
+		// update paths
+		try
+		{
+			fPaths = new ArrayList<List<Integer>>();
+
+			for ( int i = 0; i < fVehicles.size(); i++)
+			{
+				Statement lRouteStatement = fDBConnection.createStatement();
+				ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes ORDER BY Agent_ID ASC, Route_Position ASC");
+				
+				List<Integer> lPath = new ArrayList<Integer>();
+				while (lRouteResult.next())
+				{
+					lPath.add(lRouteResult.getInt("Location_ID"));
+				}
+				
+				fPaths.add(lPath);
+			}
+			
+			//Statement lRouteStatement = fDBConnection.createStatement();
+			//ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes ORDER BY Agent_ID ASC, Route_Position ASC");
+
+			/*while (lRouteResult.next())
+			{
+				int lLocationID = lRouteResult.getInt("Location_ID");
+				int lAgentID = lRouteResult.getInt("Agent_ID");
+				int lRoutePosition = lRouteResult.getInt("Route_Position");
+			}*/
+		}
+		catch (SQLException e) { }//e.printStackTrace(); }
 	}
 }
