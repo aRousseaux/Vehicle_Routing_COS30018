@@ -164,10 +164,8 @@ public class DatabaseAgent extends Agent
 		{
 			Statement stmt = fDBConnection.createStatement();
 			stmt.executeUpdate("INSERT INTO agent_routes VALUES (" + aID + ", '" + index + "', " + iLocation + ");");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+		} 
+		catch (SQLException e) { e.printStackTrace(); }
 	}
 	
 	protected void takeDown()
