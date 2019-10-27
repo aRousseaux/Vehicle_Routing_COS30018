@@ -54,15 +54,14 @@ public abstract class GenericRouter extends Agent implements Router
 
 		int[][] lSolution = solveRoute(fDataModel, 2000);
 		
-		System.out.println("Sending routes out");
 		for (int i = 0; i < lSolution.length; i++)
 		{
-			System.out.println(Arrays.toString(lSolution[i]));
+			System.out.println("Solution to be sent: " + Arrays.toString(lSolution[i]));
 			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 
 			for (int j = 0; j < selectedAgents.size(); j++)
 			{
-				if (selectedAgents.get(i).getName().getLocalName().contains("Delivery_Agent" + String.valueOf(j + 1)))
+				if (selectedAgents.get(i).getName().getLocalName().contains("Delivery_Agent" + String.valueOf(j)))
 				{
 					message.addReceiver(selectedAgents.get(i).getName());
 					message.setContent("Route: " + Arrays.toString(lSolution[i]));
@@ -73,11 +72,10 @@ public abstract class GenericRouter extends Agent implements Router
 			
 			for (int j = 0; j < selectedAgents.size(); j++)
 			{
-				if (selectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j + 1)))
+				if (selectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j)))
 				{
 					message.addReceiver(selectedAgents.get(i).getName());
 					message.setContent("agent_routes:" + i + " " +Arrays.toString(lSolution[i]).trim() + " " + calculateRouteLength(lSolution[i], fDataModel) );
-					System.out.println("send routes");
 					send(message);
 				}
 			}

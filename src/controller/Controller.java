@@ -67,21 +67,18 @@ public class Controller implements Runnable
 			switch(aRoutingMethod)
 			{
 			case "CHOCO":
-				System.out.print("Creating a CHOCO Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
 				break;
 			case "OR-Tools":
-				System.out.print("Creating an OR-Tools Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
 			case "ACO":
-				System.out.print("Creating an ACO Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACORouter.class.getName(), new Object[]{aDataModel});
+				break;
 			case "ACO-Partition":
-				System.out.print("Creating an ACO Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{aDataModel});
+				break;
 			default:
-				System.out.print("Creating a default Master Route Agent...\n");
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
 			}
