@@ -67,6 +67,6 @@ public class RoutingFrame extends JFrame
 		}
 		
 		fController = new Controller( aDataModel, aMethod );
-		
+
 	}
 }

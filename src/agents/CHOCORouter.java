@@ -64,17 +64,27 @@ public class CHOCORouter extends GenericRouter
 
 				if (j > 0)
 				{
-					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][j],"!=", 0), lModel.atLeastNValues(vehicle_locations[i], lModel.intVar(2), true)),
+					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][j],"!=", 0), lModel.atLeastNValues(vehicle_locations[i], lModel.intVar(1), true)),
 							lModel.or(lModel.element(vehicle_routes[i][j], vehicle_routes[i], lModel.intVar(j), 0), lModel.element(vehicle_routes[i][j - 1], vehicle_routes[i], lModel.intVar(j), 0)));
 
 					lModel.ifThen(lModel.count(j, vehicle_routes[i], lModel.intVar(0)), lModel.arithm(vehicle_routes[i][j], "=", 0));
+
+					if (aDataModel.numVehicles() == 1)
+					{
+						lModel.circuit(vehicle_routes[i]).post();
+					}
 				}
 
 				for (int k = 1; k < aDataModel.numLocations(); k++)
 				{
-					lModel.ifThen(lModel.element(lModel.intVar(j), vehicle_routes[i], lModel.intVar(k), 0), lModel.arithm(route_lengths[i][k], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
+					lModel.ifThen(lModel.element(lModel.intVar(j), vehicle_routes[i], lModel.intVar(k), 0),
+							lModel.arithm(route_lengths[i][k], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
 
-					lModel.not(lModel.and(lModel.element(vehicle_routes[i][j], vehicle_locations[i], lModel.intVar(k), 0), lModel.arithm(vehicle_routes[i][k], "=", j))).post();
+					lModel.not(lModel.and(lModel.element(vehicle_routes[i][j], vehicle_locations[i], lModel.intVar(k), 0),
+							lModel.arithm(vehicle_routes[i][k], "=", j))).post();
+
+					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][k], "!=", 0), lModel.element(lModel.intVar(0), vehicle_routes[i], vehicle_routes[i][k], 0)),
+							lModel.arithm(route_lengths[i][0], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[0], lModel, 0)));
 				}
 			}
 
@@ -91,20 +101,7 @@ public class CHOCORouter extends GenericRouter
 		Solver lSolver = lModel.getSolver();
 		if (lSolver.solve())
 		{
-			System.out.print("Solution Found!\n");
 			Solution s = lSolver.findSolution();
-			System.out.print(s +"\n");
-			// solved
-
-			for (int i = 0; i < lVehiclePackages[0].length; i++)
-			{
-				for (int j = 0; j < lVehiclePackages.length; j++)
-				{
-					System.out.print(lVehiclePackages[j][i].getValue() + ",");
-				}
-
-				System.out.println("");
-			}
 		}
 		else
 		{
@@ -113,9 +110,11 @@ public class CHOCORouter extends GenericRouter
 		}
 
 		int[][] return_routes = new int[aDataModel.numVehicles()][];
+		System.out.println("Num vehicle: " + aDataModel.numVehicles());
 
 		for (int i = 0; i < aDataModel.numVehicles(); i++)
 		{
+
 			String route_string = "";
 
 			route_string += "0, ";
@@ -149,6 +148,7 @@ public class CHOCORouter extends GenericRouter
 		return return_routes;
 	}
 
+	//creates an array of intvars that has the package value, for a specific package, for all the solution vehicles
 	public static IntVar[] getColumn(IntVar[][] aMatrix, int index)
 	{
 		IntVar[] return_array = new IntVar[aMatrix.length];
@@ -161,6 +161,7 @@ public class CHOCORouter extends GenericRouter
 		return return_array;
 	}
 
+	//converts the input matrix into an array, but just creating a big array, with the individual matrix within the array, one after the other
 	public static IntVar[] MatrixToArray(IntVar[][] matrix)
 	{
 		IntVar[] return_array = new IntVar[(matrix.length * matrix[0].length)];
@@ -174,6 +175,7 @@ public class CHOCORouter extends GenericRouter
 		}
 		return return_array;
 	}
+
 
 	public static IntVar getBinPack(IntVar[] input_var, int[] matrix_location, Model model, int i)
 	{

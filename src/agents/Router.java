@@ -5,6 +5,9 @@ import data.DataModel;
 
 public interface Router 
 {
+		//remote interface for class that extend Generic Router
+		//allows methods to be called, from the controller
+
 		// grabs the database agent and drivers to upload routes
 		public abstract void findDrivers();
 		

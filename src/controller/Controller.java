@@ -64,6 +64,7 @@ public class Controller implements Runnable
 		// create master
 		try
 		{
+			//based on form input, a specific MasterRouteAgent will be created
 			switch(aRoutingMethod)
 			{
 			case "CHOCO":
