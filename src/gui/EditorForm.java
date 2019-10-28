@@ -91,7 +91,8 @@ private static final long serialVersionUID = 1L;
 		fRoutingMethods = new JComboBox<String>(new String[] 
 		{
 			"OR-Tools", 
-			"CHOCO", 
+			"CHOCO",
+			"CHOCO2",
 			"ACO", 
 			"ACO-Partition"
 		});

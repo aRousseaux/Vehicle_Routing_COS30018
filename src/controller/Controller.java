@@ -70,6 +70,9 @@ public class Controller implements Runnable
 			case "CHOCO":
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
 				break;
+			case "CHOCO2":
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter2.class.getName(), new Object[]{aDataModel});
+				break;
 			case "OR-Tools":
 				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
 				break;
