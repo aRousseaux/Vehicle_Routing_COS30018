@@ -1,44 +1,68 @@
-
 package data;
 
 import java.util.Date;
 
-public class Location 
+public class Location
 {
 	public int x;
 	public int y;
-	public int fCapacity;
-	
+	public int fWeight;
+
 	//set as delivered when vehicles reach location
 	private boolean fDelivered;
 	private Date fDeadline;
-	
-	public Location( int aX, int aY )
+	private int fLocationID;
+	public int fCapacity;
+
+	public int getfLocationID() {
+		return fLocationID;
+	}
+
+	public Location(int aX, int aY)
 	{
 		x = aX;
 		y = aY;
-		fCapacity = 0;
-		
+		fWeight = 0;
+
+		fLocationID = 0;
+
 		fDelivered = false;
 		fDeadline = null;
 	}
-	
+
+	public Location(int ID, int aX, int aY)
+	{
+		x = aX;
+		y = aY;
+		fWeight = 0;
+
+		fLocationID = ID;
+
+		fDelivered = false;
+		fDeadline = null;
+	}
+
 	public void setDelivered()
 	{
 		fDelivered = true;
 		fDeadline = null;
 	}
-	
+
 	public boolean beenDelivered()
 	{
 		return fDelivered;
 	}
-	
+
 	public Date getDeadline()
 	{
 		return fDeadline;
 	}
-	
+
+	public int getWeight()
+	{
+		return fWeight;
+	}
+
 	public int getCapacity()
 	{
 		return fCapacity;
