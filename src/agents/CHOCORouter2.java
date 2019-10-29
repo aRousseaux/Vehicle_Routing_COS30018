@@ -2,14 +2,15 @@ package agents;
 
 import data.DataModel;
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
 public class CHOCORouter2 extends CHOCORouter
 {
-    public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance )
+	private static final long serialVersionUID = 1L;
+
+	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance )
     {
         // lModel
         Model lModel = new Model("Vehicle Routing Problem");

@@ -58,7 +58,7 @@ public class Ant
             {
                 if (model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)] > 0)
                 {
-                    values += model.getFPathAtIndex(current_location_id, unvisited_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
+                    values += model.getPheremone(current_location_id, unvisited_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
                 }
 
                 if (values >= random_crossover_value)
@@ -108,7 +108,7 @@ public class Ant
         {
             if (model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)] > 0)
             {
-                max_value += model.getFPathAtIndex(current_location_id, unvisited_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
+                max_value += model.getPheremone(current_location_id, unvisited_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
             }
         }
 
@@ -126,9 +126,9 @@ public class Ant
         {
             for (int i = 0; i < location_mapping.length; i++)
             {
-                float new_value = input_model.getFPathAtIndex(i, location_mapping[i]) + 10000/total_distance_travelled;
+                float new_value = input_model.getPheremone(i, location_mapping[i]) + 10000/total_distance_travelled;
                 input_model.updatePheremonePath(i, location_mapping[i], new_value);
-                new_value = input_model.getFPathAtIndex(location_mapping[i], i) +  10000/total_distance_travelled;
+                new_value = input_model.getPheremone(location_mapping[i], i) +  10000/total_distance_travelled;
                 input_model.updatePheremonePath(location_mapping[i], i, new_value);
             }
         }
@@ -272,7 +272,7 @@ public class Ant
             {
                 if (model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)] > 0)
                 {
-                    values += model.getFPathAtIndex(current_location_id, avalible_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
+                    values += model.getPheremone(current_location_id, avalible_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
                 }
 
                 if (values >= random_crossover_value)
@@ -321,7 +321,7 @@ public class Ant
         {
             if (model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)] > 0)
             {
-                max_value += model.getFPathAtIndex(current_location_id, avalible_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
+                max_value += model.getPheremone(current_location_id, avalible_locations.get(i)) * 10000/model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
             }
         }
 

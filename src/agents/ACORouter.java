@@ -3,17 +3,11 @@ package agents;
 
 import data.DataModel;
 import data.PheremoneModel;
-import jade.core.Agent;
-import jade.domain.AMSService;
-import jade.domain.FIPAAgentManagement.AMSAgentDescription;
-import jade.domain.FIPAAgentManagement.SearchConstraints;
-import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ACORouter extends GenericRouter implements Router
+public class ACORouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
 	public final int fIterations = 100;
@@ -59,7 +53,7 @@ public class ACORouter extends GenericRouter implements Router
 			{
 				for (int j = 0; j < fDataModel.numLocations(); j++)
 				{
-					System.out.print(fGraph.getFPathAtIndex(i, j) +  ", ");
+					System.out.print(fGraph.getPheremone(i, j) +  ", ");
 				}
 				System.out.println();
 			}
@@ -67,64 +61,7 @@ public class ACORouter extends GenericRouter implements Router
 			System.out.println();
 		}
 
-		return getSolutions();	}
-
-
-	public int calculateRouteLength(int[] aLocations, DataModel aDataModel) 
-	{
-		return 0;
-	}
-
-	@Override
-	public void distributeRoutes()
-	{
-		AMSAgentDescription[] lAgents;
-
-		SearchConstraints sc = new SearchConstraints();
-		sc.setMaxResults(Long.valueOf(-1));
-
-		try
-		{
-			lAgents = AMSService.search(this, new AMSAgentDescription(), sc);
-
-			for (int i = 0; i < lAgents.length; i++)
-			{
-				if (lAgents[i].getName().toString().contains("Delivery_Agent"))
-				{
-					fSelectedAgents.add(lAgents[i]);
-				}
-			}
-		}
-		catch (Exception e)	{ e.printStackTrace(); }
-
-		int[][] lSolution = solveRoute(fDataModel, 2000);
-
-		for (int i = 0; i < lSolution.length; i++)
-		{
-			System.out.println("Solution to be sent: " + Arrays.toString(lSolution[i]));
-			ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-
-			for (int j = 0; j < fSelectedAgents.size(); j++)
-			{
-				if (fSelectedAgents.get(i).getName().getLocalName().contains("Delivery_Agent" + String.valueOf(j)))
-				{
-					message.addReceiver(fSelectedAgents.get(i).getName());
-					message.setContent("Route: " + Arrays.toString(lSolution[i]));
-					send(message);
-					break;
-				}
-			}
-
-			for (int j = 0; j < fSelectedAgents.size(); j++)
-			{
-				if (fSelectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j)))
-				{
-					message.addReceiver(fSelectedAgents.get(i).getName());
-					message.setContent("agent_routes:" + i + " " +Arrays.toString(lSolution[i]).trim() + " " + calculateRouteLength(lSolution[i], fDataModel) );
-					send(message);
-				}
-			}
-		}
+		return getSolutions();	
 	}
 
 	public void ConstructSolutions()
@@ -226,16 +163,16 @@ public class ACORouter extends GenericRouter implements Router
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//if (fGraph.getFPathAtIndex(i,j) > max_value)
-				if (fGraph.getFPathAtIndex(i, j) > max_value)
+				if (fGraph.getPheremone(i, j) > max_value)
 				{
-					max_value = fGraph.getFPathAtIndex(i,j);
+					max_value = fGraph.getPheremone(i,j);
 				}
 			}
 
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getFPathAtIndex(i,j) < max_value * 0.25)
+				if (fGraph.getPheremone(i,j) < max_value * 0.25)
 				{
 					fGraph.updatePheremonePath(i,j, 0);
 				}

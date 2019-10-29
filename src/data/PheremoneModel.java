@@ -25,7 +25,7 @@ public class PheremoneModel extends DataModel
         fPaths[aLocation1][aLocation2] = aPheremone;
     }
 
-    public float getFPathAtIndex(int aLocation1, int aLocation2)
+    public float getPheremone(int aLocation1, int aLocation2)
     {
         return fPaths[aLocation1][aLocation2];
     }
