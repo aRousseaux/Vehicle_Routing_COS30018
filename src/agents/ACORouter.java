@@ -3,6 +3,7 @@ package agents;
 
 import data.DataModel;
 import data.PheremoneModel;
+import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,18 @@ public class ACORouter extends GenericRouter
 	public PheremoneModel fGraph;
 	protected DataModel fDataModel;
 
+	public ACORouter()
+	{
+		registerO2AInterface(Router.class, this);
+
+		fSelectedAgents = new ArrayList<AMSAgentDescription>();
+	}
+
+	protected void setup()
+	{
+		fDataModel = (DataModel) getArguments()[0];
+	}
+
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance) 
 	{
 		// initialize
@@ -24,7 +37,7 @@ public class ACORouter extends GenericRouter
 		Ant lBestAnt = null;
 		int lBestPathLength = 0;
 
-		fGraph = new PheremoneModel( 4, 6, 9 );
+		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), 2);
 		fDataModel = fGraph;
 		fNumAnts = (int) Math.pow(fDataModel.numLocations(), 2);
 
