@@ -165,7 +165,7 @@ public class ACORouter extends GenericRouter
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
 	{
 		// initialize
-		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), 1);
+		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed());
 		fDataModel = fGraph;
 		fVRPAnts = new ArrayList<Ant_VRP>();
 		fNumAnts = fGraph.numVehicles();

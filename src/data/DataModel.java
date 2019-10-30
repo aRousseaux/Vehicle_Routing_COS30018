@@ -10,10 +10,12 @@ public class DataModel
 	private int[][] fDistanceMatrix; // distances between each location
 	private List< Vehicle > fVehicles; // delivery drivers
 	private List< Location > fLocations; // each location
-	
-	public DataModel( int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity )
+	private int fSeed;
+
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity )
 	{
 		fVehicles = new ArrayList< Vehicle >();
+		fSeed = aSeed;
 		
 		// generate the vehicle representation
 		for ( int i = 0; i < aVehicleNumber; i ++ )
@@ -102,5 +104,9 @@ public class DataModel
 	public int numLocations()
 	{
 		return fLocations.size();
+	}
+
+	public int getfSeed() {
+		return fSeed;
 	}
 }

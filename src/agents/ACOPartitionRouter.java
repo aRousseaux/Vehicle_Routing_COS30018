@@ -33,7 +33,7 @@ public class ACOPartitionRouter extends ACORouter
 			System.out.println("NULL");
 		}
 
-		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), 9 );
+		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed());
 		fDataModel = fGraph;
 
 		fVRPAnts = new ArrayList<Ant_VRP>();
