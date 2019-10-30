@@ -55,9 +55,7 @@ public class ACORouter extends GenericRouter
 		{
 			System.out.println("Path: " + lAnts.getPath());
 		}
-
-
-
+		
 		if (avalible_locations.size() <= 0)
 		{
 			for (Ant_VRP jAnts : fVRPAnts)
@@ -180,30 +178,10 @@ public class ACORouter extends GenericRouter
 		Ant lBestAnt = null;
 		int lBestPathLength = 0;
 
-		for (int i = 0; i < fDataModel.numLocations(); i++)
-		{
-			for (int j = 0; j < fDataModel.numLocations(); j++)
-			{
-				System.out.print(fDataModel.getDistanceMatrix()[i][j] +  ", ");
-			}
-			System.out.println();
-		}
-
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions();
 			//UpdateTrails();
-
-			for (int i = 0; i < fDataModel.numLocations(); i++)
-			{
-				for (int j = 0; j < fDataModel.numLocations(); j++)
-				{
-					System.out.print(fGraph.getPheremone(i, j) +  ", ");
-				}
-				System.out.println();
-			}
-
-			System.out.println();
 		}
 
 		return getSolutions();

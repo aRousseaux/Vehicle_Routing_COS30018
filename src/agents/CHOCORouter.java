@@ -39,9 +39,16 @@ public class CHOCORouter extends GenericRouter
 
 		IntVar[][] lVehiclePackages = lModel.intVarMatrix(aDataModel.numLocations(), aDataModel.numVehicles(), 0, 1);
 
-		for (int i = 0; i < lVehiclePackages.length; i++)
+		if (aDataModel.getTotalCapacity() >= aDataModel.numLocations())
 		{
-			lModel.sum(lVehiclePackages[i], "=", 1).post();
+			for (int i = 0; i < lVehiclePackages.length; i++)
+			{
+				lModel.sum(lVehiclePackages[i], "=", 1).post();
+			}
+		}
+		else
+		{
+			lModel.sum(MatrixToArray(lVehiclePackages), "=", aDataModel.getTotalCapacity()).post();
 		}
 
 		for (int i = 0; i < aDataModel.numVehicles(); i++)

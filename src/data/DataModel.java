@@ -1,22 +1,23 @@
 
 package data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+		import java.util.ArrayList;
+		import java.util.List;
+		import java.util.Random;
 
-public class DataModel 
+public class DataModel
 {
 	private int[][] fDistanceMatrix; // distances between each location
 	private List< Vehicle > fVehicles; // delivery drivers
 	private List< Location > fLocations; // each location
 	private int fSeed;
+	private Boolean fPackagesByWeight;
 
 	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity )
 	{
 		fVehicles = new ArrayList< Vehicle >();
 		fSeed = aSeed;
-		
+
 		// generate the vehicle representation
 		for ( int i = 0; i < aVehicleNumber; i ++ )
 		{
@@ -24,12 +25,37 @@ public class DataModel
 		}
 
 		generateLocations( aNumLocations, aSeed );
-		
+
 		// update distance matrix
 		calculateDistances();
+
+		fPackagesByWeight = false;
 	}
-	
-	private void generateLocations( int aNumLocations, int aSeed )
+
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight)
+	{
+		fVehicles = new ArrayList< Vehicle >();
+		fSeed = aSeed;
+
+		// generate the vehicle representation
+		for ( int i = 0; i < aVehicleNumber; i ++ )
+		{
+			fVehicles.add( new Vehicle( i, aCapacity, 8 ) );
+		}
+
+		generateLocations( aNumLocations, aSeed );
+
+		// update distance matrix
+		calculateDistances();
+
+		fPackagesByWeight = aPackagesByWeight;
+	}
+
+	public Boolean getfPackagesByWeight() {
+		return fPackagesByWeight;
+	}
+
+	private void generateLocations(int aNumLocations, int aSeed )
 	{
 		// initialize locations variable
 		fLocations = new ArrayList<Location>();
@@ -43,7 +69,7 @@ public class DataModel
 			fLocations.add( new Location( i, lRand.nextInt( 1000 ), lRand.nextInt( 1000 ) ) );
 		}
 	}
-	
+
 	private void calculateDistances()
 	{
 		// initialize matrix
@@ -68,39 +94,39 @@ public class DataModel
 			}
 		}
 	}
-	
+
 	public int[] getCapacities()
 	{
 		int[] lCapacities = new int[ numVehicles() ];
-		
+
 		for ( int i = 0; i < numVehicles(); i++ )
 		{
 			lCapacities[i] = getVehicle(i).getCapacity();
 		}
-		
+
 		return lCapacities;
 	}
-	
+
 	public int[][] getDistanceMatrix()
 	{
 		return fDistanceMatrix;
 	}
-	
+
 	public Vehicle getVehicle( int aIndex )
 	{
 		return fVehicles.get( aIndex );
 	}
-	
+
 	public int numVehicles()
 	{
 		return fVehicles.size();
 	}
-	
+
 	public Location getLocation( int aIndex )
 	{
 		return fLocations.get( aIndex );
 	}
-	
+
 	public int numLocations()
 	{
 		return fLocations.size();
@@ -108,5 +134,16 @@ public class DataModel
 
 	public int getfSeed() {
 		return fSeed;
+	}
+
+	public int getTotalCapacity()
+	{
+		int return_capacity = 0;
+		for (int i = 0; i < getCapacities().length; i++)
+		{
+			return_capacity += getCapacities()[i];
+		}
+
+		return return_capacity;
 	}
 }

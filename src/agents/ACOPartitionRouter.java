@@ -92,16 +92,6 @@ public class ACOPartitionRouter extends ACORouter
 			}
 		}
 
-		for (int i = 0; i < lResult.length; i++)
-		{
-			for (int j = 0; j < lResult[i].size(); j++)
-			{
-				System.out.print(lResult[i].get(j).getfLocationID() + ", ");
-			}
-
-			System.out.println();
-		}
-
 		return lResult;
 	}
 
@@ -121,20 +111,10 @@ public class ACOPartitionRouter extends ACORouter
 
 		fNumAnts = (int) Math.pow(fDataModel.numLocations(), 2);
 
-		for (int i = 0; i < fDataModel.numLocations(); i++)
-		{
-			for (int j = 0; j < fDataModel.numLocations(); j++)
-			{
-				System.out.print(fDataModel.getDistanceMatrix()[i][j] +  ", ");
-			}
-			System.out.println();
-		}
-
 		int counter = 0;
 
 		for (int i = 0; i < fNumAnts; i++)
 		{
-			//System.out.println(Arrays.toString(ant_routes[counter].toArray()));
 			fVRPAnts.add( new Ant_VRP( fDataModel, (ArrayList<Integer>) ant_routes[counter].clone()) );
 			counter++;
 			if (counter >= ant_routes.length)
@@ -147,34 +127,16 @@ public class ACOPartitionRouter extends ACORouter
 		{
 			ConstructSolutions(ant_routes);
 			UpdateTrails();
-
-			for (int i = 0; i < fDataModel.numLocations(); i++)
-			{
-				for (int j = 0; j < fDataModel.numLocations(); j++)
-				{
-					System.out.print(fGraph.getPheremone(i, j) +  ", ");
-				}
-				System.out.println();
-			}
-
-			System.out.println();
 		}
 
 		for ( Ant lAnts : fVRPAnts ) {
-			while (lAnts.nextLocation(fGraph)) {
+			while (lAnts.nextLocation(fGraph))
+			{
 
 			}
 		}
 
 		int[][] return_array = new int[fDataModel.numVehicles()][];
-
-		System.out.println("Final Routes: ");
-
-		for (int i = 0; i < return_array.length; i++)
-		{
-			return_array[i] = fVRPAnts.get(i).getPathArray();
-			System.out.println(Arrays.toString(return_array[i]));
-		}
 
 		return return_array;
 	}

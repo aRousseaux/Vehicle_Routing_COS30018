@@ -85,7 +85,14 @@ public class CHOCORouter2 extends CHOCORouter
 
         lModel.sum(MatrixToArray(route_lengths), "=", total_distance).post();
 
-        lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.numLocations()), true).post();
+        if (aDataModel.numLocations() < aDataModel.getTotalCapacity())
+        {
+            lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.numLocations()), true).post();
+        }
+        else
+        {
+            lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity()), true).post();
+        }
 
         lModel.setObjective(lModel.MINIMIZE, total_distance);
         lModel.arithm(total_distance, ">", aDataModel.numVehicles()).post();
