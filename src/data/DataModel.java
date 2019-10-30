@@ -136,6 +136,7 @@ public class DataModel
 		return fSeed;
 	}
 
+	//total capacity of all vehicles required
 	public int getTotalCapacity()
 	{
 		int return_capacity = 0;

@@ -105,13 +105,17 @@ public class Controller implements Runnable
 			
 			// grab interface
 			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
-			
+
+			//records start time of solver
 			long lStart = System.currentTimeMillis();
 			
 			// solve and distribute routes
 			lMasterInterface.distributeRoutes();
-			
+
+			//records end time of solver
 			long lFinish = System.currentTimeMillis();
+
+			//Displays total time required for solver to run, providing crucial data for further performance anaylsis
 			System.out.println("Time taken to route: " + (lFinish - lStart) + " milliseconds.");
 		} 
 		catch ( InterruptedException | StaleProxyException e ) { e.printStackTrace(); }

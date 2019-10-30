@@ -11,7 +11,7 @@ public class Location
 	//set as delivered when vehicles reach location
 	private boolean fDelivered;
 	private Date fDeadline;
-	private int fLocationID;
+	private int fLocationID; //Primary ID for location, uses for identification
 	public int fCapacity;
 
 	public int getfLocationID() {

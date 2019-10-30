@@ -23,11 +23,13 @@ public class DatabaseAgent extends Agent
 		{
 			Statement stmt = fDBConnection.createStatement();
 
+			//sets up database tables, if they don't already exist
 			stmt.execute("CREATE TABLE IF NOT EXISTS agent_data(Agent_ID INT, Agent_Capacity INT, PRIMARY KEY (Agent_ID));");
 			stmt.execute("CREATE TABLE IF NOT EXISTS location_data(Location_ID INT, Pos_X INT, Pos_Y INT, PRIMARY KEY (Location_ID));");
 			stmt.execute("CREATE TABLE IF NOT EXISTS agent_positions(Agent_ID INT, Pos_X INT, Pos_Y INT, Agent_Time VARCHAR(256), FOREIGN KEY (Agent_ID) REFERENCES agent_data(Agent_ID));");
 			stmt.execute("CREATE TABLE IF NOT EXISTS agent_routes(Agent_ID INT, Route_Position INT, Location_ID INT, FOREIGN KEY (Agent_ID) REFERENCES agent_data(Agent_ID), FOREIGN KEY (Location_ID) REFERENCES location_data(Location_ID));");
 
+			//clear data from existing tables, to prevent any errors
 			stmt.executeUpdate("DELETE FROM Agent_Positions");
 			stmt.executeUpdate("DELETE FROM agent_routes");
 			stmt.executeUpdate("DELETE FROM location_data");
@@ -60,6 +62,7 @@ public class DatabaseAgent extends Agent
 		
 		try
 		{
+			//with provided DataModel, all of the generated locations are added to the database
 			for (int i = 0; i < fDataModel.numLocations(); i++)
 			{
 				Statement lLocationStatement = fDBConnection.createStatement();
@@ -79,7 +82,7 @@ public class DatabaseAgent extends Agent
 
 				if (lMessage != null)
 				{
-					// driver wanting to update its position
+					// driver wanting to update its position in the database
 					if (lMessage.getContent().contains("agent_position"))
 					{
 						DateTimeFormatter lDateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");

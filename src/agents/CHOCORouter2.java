@@ -10,6 +10,7 @@ public class CHOCORouter2 extends CHOCORouter
 {
 	private static final long serialVersionUID = 1L;
 
+	//solves the best possible route for input drivers and locations
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance )
     {
         // lModel

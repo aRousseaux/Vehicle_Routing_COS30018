@@ -31,6 +31,7 @@ public class ACORouter extends GenericRouter
 		fDataModel = (DataModel) getArguments()[0];
 	}
 
+	//updates pheremone model and resets ants
 	public void ConstructSolutions()
 	{
 		avalible_locations = new ArrayList<Integer>();
@@ -51,11 +52,6 @@ public class ACORouter extends GenericRouter
 			}
 		}
 
-		for (Ant_VRP lAnts : fVRPAnts)
-		{
-			System.out.println("Path: " + lAnts.getPath());
-		}
-		
 		if (avalible_locations.size() <= 0)
 		{
 			for (Ant_VRP jAnts : fVRPAnts)
@@ -66,8 +62,6 @@ public class ACORouter extends GenericRouter
 				{
 					jAnts.total_distance_travelled = total_distance;
 				}
-
-				System.out.println(jAnts.getPath_alt() + " | " + jAnts.getTotal_distance_travelled());
 
 				jAnts.reset();
 			}
@@ -80,6 +74,8 @@ public class ACORouter extends GenericRouter
 		}
 	}
 
+	//gets the solution, based on pheremone model
+	//output int[][] is then sent through to all delivery agents
 	public int[][] getSolutions()
 	{
 		avalible_locations = new ArrayList<Integer>();
@@ -135,6 +131,8 @@ public class ACORouter extends GenericRouter
 		return return_array;
 	}
 
+	//prune the pheremone model
+	//if a value is too small is comparison to the largest value in the model, then these pheremone values are set to 0
 	public void UpdateTrails()
 	{
 		for (int i = 0; i < fGraph.numLocations(); i++)
@@ -175,9 +173,7 @@ public class ACORouter extends GenericRouter
 
 		avalible_locations = new ArrayList<Integer>();
 
-		Ant lBestAnt = null;
-		int lBestPathLength = 0;
-
+		//loops through all iteratons, strengthening pheremone model
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions();

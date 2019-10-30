@@ -60,6 +60,7 @@ public class ACOPartitionRouter extends ACORouter
 		}
 	}
 
+	//locations are randomly divided to an Array of ArrayLists of Locations, to test underlying ACO functionality
 	private ArrayList<Location>[] randomPartition(DataModel aDataModel)
 	{
 		ArrayList<Location>[] lResult = (ArrayList<Location>[]) new ArrayList[aDataModel.numVehicles()];
@@ -76,9 +77,6 @@ public class ACOPartitionRouter extends ACORouter
 		}
 
 		Collections.shuffle(lRemaining);
-		// fix index, too tired to think about this
-
-		int counter = 0;
 
 		while (lRemaining.size() > 0)
 		{
@@ -104,6 +102,7 @@ public class ACOPartitionRouter extends ACORouter
 		// solve each partition
 		ArrayList<Location>[] lPartitions = randomPartition( fDataModel );
 
+		//gets the location_id, from the locations in lPartitions
 		for (int i = 0; i < lPartitions.length; i++)
 		{
 			ant_routes[i] = arrayListIntFromArrayListLocation(lPartitions[i]);
@@ -113,6 +112,7 @@ public class ACOPartitionRouter extends ACORouter
 
 		int counter = 0;
 
+		//the partitions are assigned to the ants present, looping through all the partitions, before resetting back to the first partition
 		for (int i = 0; i < fNumAnts; i++)
 		{
 			fVRPAnts.add( new Ant_VRP( fDataModel, (ArrayList<Integer>) ant_routes[counter].clone()) );
@@ -123,11 +123,13 @@ public class ACOPartitionRouter extends ACORouter
 			}
 		}
 
+		//then ACO run for fIterations, constantly refining the pheremone model.
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions(ant_routes);
 			UpdateTrails();
 		}
+
 
 		for ( Ant lAnts : fVRPAnts ) {
 			while (lAnts.nextLocation(fGraph))
@@ -137,10 +139,15 @@ public class ACOPartitionRouter extends ACORouter
 		}
 
 		int[][] return_array = new int[fDataModel.numVehicles()][];
+		for (int i = 0; i < return_array.length; i++)
+		{
+			return_array[i] = fVRPAnts.get(i).getPathArray();
+		}
 
 		return return_array;
 	}
 
+	//gets the location IDs from input locations in locations list, returning them
 	public ArrayList<Integer> arrayListIntFromArrayListLocation(ArrayList<Location> location_list)
 	{
 		ArrayList<Integer> return_list = new ArrayList<Integer>();
@@ -156,6 +163,7 @@ public class ACOPartitionRouter extends ACORouter
 		return return_list;
 	}
 
+	//updates pheremone model and resets ants
 	public void ConstructSolutions(ArrayList<Integer>[] input_routes)
 	{
 		int counter = 0;

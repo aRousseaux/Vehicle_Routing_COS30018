@@ -37,12 +37,14 @@ public class DriverAgent extends Agent
 
 		Object[] args = getArguments();
 
+		//gets all the data the args that it was created with
 		fDataModel = (DataModel) args[0];
 		fIdentification = (int) args[1];
 		fPosition = null;
 
 		findAgents();
 
+		//when there is a new message, message contents will be examined and then proceed with appropiate action
 		addBehaviour(new CyclicBehaviour(this)
 		{
 			private static final long serialVersionUID = 1L;
@@ -60,6 +62,8 @@ public class DriverAgent extends Agent
 					message.setContent("agent_details:" + fIdentification + "," + fDataModel.getCapacities()[fIdentification]);
 					send(message);
 
+					//if a given message contains the string "Route: " is means that it is a message informing the driver of it's route
+					//string processed, extracting location indexes with in the data
 					if (msg.getContent().contains("Route: "))
 					{
 						System.out.println(this.getAgent().getLocalName());
@@ -77,6 +81,7 @@ public class DriverAgent extends Agent
 							fLocationIndex = 0;
 						}
 
+						//once data has been extracted, this message is forwarded to the DatabaseAgents, who inserts this data in the 'agent_routes' table
 						ACLMessage forward = new ACLMessage(ACLMessage.INFORM);
 						forward.addReceiver(fDBAgent.getName());
 						forward.setContent("agent_routes: " + msg.getContent().replace("Route: ", "").trim());
@@ -94,7 +99,9 @@ public class DriverAgent extends Agent
 			}
 		});
 		
-		// advance position
+		// advance position, by a specified velocity
+		// know when has agent arrived at it's target location
+
 		addBehaviour(new TickerBehaviour(this, 150) 
 		{
 			private static final long serialVersionUID = 1L;
@@ -263,6 +270,7 @@ public class DriverAgent extends Agent
 		});
 		
 		// send out agent location
+		//ever 0.5 seconds a message is sent to the Database agent regarding the driver's current position
 		addBehaviour(new TickerBehaviour(this, 500) 
 		{
 			private static final long serialVersionUID = 1L;
@@ -282,7 +290,8 @@ public class DriverAgent extends Agent
 
 		});
 	}
-	
+
+	//identifies and sames the DBAgent and MasterRouteAgent, to internal fields, to easier access
 	public void findAgents()
 	{
 		try
@@ -310,7 +319,9 @@ public class DriverAgent extends Agent
 			e.printStackTrace();
 		}
 	}
-	
+
+	//method provides data for driver movement.
+	//given a number of input parameters, a the next x position for a driver can be found
 	public double getPosX(double gradient, double c, double start_x, double start_y, double distance)
 	{
 		return (gradient * start_y - gradient * c + start_x +

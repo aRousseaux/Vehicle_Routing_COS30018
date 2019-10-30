@@ -25,6 +25,8 @@ public class Ant
     protected int total_distance_travelled;
     protected int[] location_mapping;
 
+    //Ant objects are used within ACO solvers, finding the 'best' path based on the level of pheromones
+    //leading to different locations
     public Ant(DataModel aGraph)
     {
         total_distance_travelled = 0;
@@ -51,6 +53,7 @@ public class Ant
         fCurrentLocation = fDataModel.getLocation(0);
     }
 
+    //finds the next locations for the ant, based on the input pheremone model and the remaining locatiosn in unvisited_locations
     public boolean nextLocation(PheremoneModel model)
     {
         Random random = new Random();
@@ -80,13 +83,6 @@ public class Ant
 
                 if (values >= random_crossover_value)
                 {
-                    /*
-                    if (i == 0 && unvisited_locations.size() != fDataModel.numLocations())
-                    {
-                        continue;
-                    }
-                     */
-
                     total_distance_travelled += fDataModel.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
                     location_mapping[current_location_id] = unvisited_locations.get(i).intValue();
                     fCurrentLocation = fDataModel.getLocation(unvisited_locations.get(i));
@@ -134,20 +130,23 @@ public class Ant
         return max_value;
     }
 
+    //standard update model
     public PheremoneModel updateModel(PheremoneModel input_model)
     {
         return updateModel(input_model, 1);
     }
 
+    //pheremonemodel, is updated, based on this ant's path and it's distance
     public PheremoneModel updateModel(PheremoneModel input_model, int multiplier)
     {
         if (total_distance_travelled > 0)
         {
             for (int i = 0; i < location_mapping.length; i++)
             {
-                float new_value = input_model.getPheremone(i, location_mapping[i]) + 10000/total_distance_travelled;
+                //multiplier is utilized if a ACO elitist algorithm is used
+                float new_value = input_model.getPheremone(i, location_mapping[i]) +  (multiplier * 10000)/total_distance_travelled;
                 input_model.updatePheremonePath(i, location_mapping[i], new_value);
-                new_value = input_model.getPheremone(location_mapping[i], i) +  10000/total_distance_travelled;
+                new_value = input_model.getPheremone(location_mapping[i], i) +   (multiplier * 10000)/total_distance_travelled;
                 input_model.updatePheremonePath(location_mapping[i], i, new_value);
             }
         }
@@ -159,6 +158,8 @@ public class Ant
     public void reset()
     {
         total_distance_travelled = 0;
+
+        //unvisited_locations arraylist is refilled, with all location indexes 0 .. n
         unvisited_locations = new ArrayList<Integer>();
 
         for (int i = 0; i < fDataModel.numLocations(); i++)
@@ -211,18 +212,8 @@ public class Ant
         this.location_mapping = location_mapping;
     }
 
-    //returns a string with information regarding vehicle path
-    public String getPath_alt()
-    {
-        String return_string = "";
-        for (int i = 0; i < fDataModel.numLocations(); i++)
-        {
-            return_string += location_mapping[i] + " (" + fDataModel.getDistanceMatrix()[i][location_mapping[i]] + ")" + ", ";
-        }
 
-        return return_string;
-    }
-
+    //gets the current path of the ant, as a int array
     public int[] getPathArray()
     {
         int[] return_array;
@@ -235,6 +226,7 @@ public class Ant
             }
         }
 
+        //+= 2, is required, due to ant paths having to start and conclude at location 0
         set_locations += 2;
 
         return_array = new int[set_locations];
@@ -253,6 +245,8 @@ public class Ant
         return return_array;
     }
 
+    //returns the ant path in string form
+    //helpful for de-bugging
     public String getPath()
     {
         String return_string = "0, " + location_mapping[0] + ", ";
@@ -266,9 +260,13 @@ public class Ant
         return return_string;
     }
 
+    //resets the ant, based on a set of input location
+    //in normal reset method, unvisited locations is filled with locations 0 ... n
+    //however this can't happen in the ACOParitionRouter, hence it's inclusion
     public void reset(ArrayList<Integer> input_locations)
     {
         total_distance_travelled = 0;
+        //unvisited_locations is assigned input_locations
         unvisited_locations = input_locations;
 
         location_mapping = new int[fDataModel.numLocations()];

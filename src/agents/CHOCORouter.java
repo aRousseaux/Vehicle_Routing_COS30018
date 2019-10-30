@@ -26,7 +26,8 @@ public class CHOCORouter extends GenericRouter
 	{
 		fDataModel = (DataModel) getArguments()[0];
 	}
-	
+
+	//solves teh best routes for drivers, within the constraint of already assigned packages
 	public int[][] solveRoute( DataModel aDataModel, int aMaxRouteDistance ) 
 	{
 		// Model
