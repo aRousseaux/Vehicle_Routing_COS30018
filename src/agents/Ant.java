@@ -40,6 +40,17 @@ public class Ant
         fCurrentLocation = fDataModel.getLocation(0);
     }
 
+    public Ant(DataModel aGraph, List<Integer> input_locations)
+    {
+        total_distance_travelled = 0;
+        unvisited_locations = input_locations;
+
+        location_mapping = new int[aGraph.numLocations()];
+
+        fDataModel = aGraph;
+        fCurrentLocation = fDataModel.getLocation(0);
+    }
+
     public boolean nextLocation(PheremoneModel model)
     {
         Random random = new Random();
@@ -69,10 +80,12 @@ public class Ant
 
                 if (values >= random_crossover_value)
                 {
+                    /*
                     if (i == 0 && unvisited_locations.size() != fDataModel.numLocations())
                     {
                         continue;
                     }
+                     */
 
                     total_distance_travelled += fDataModel.getDistanceMatrix()[current_location_id][unvisited_locations.get(i)];
                     location_mapping[current_location_id] = unvisited_locations.get(i).intValue();
@@ -251,6 +264,16 @@ public class Ant
         }
 
         return return_string;
+    }
+
+    public void reset(ArrayList<Integer> input_locations)
+    {
+        total_distance_travelled = 0;
+        unvisited_locations = input_locations;
+
+        location_mapping = new int[fDataModel.numLocations()];
+
+        fCurrentLocation = fDataModel.getLocation(0);
     }
 }
 

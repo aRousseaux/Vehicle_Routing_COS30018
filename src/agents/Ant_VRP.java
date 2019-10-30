@@ -4,11 +4,17 @@ import data.DataModel;
 import data.PheremoneModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Ant_VRP extends Ant {
     public Ant_VRP(DataModel aGraph) {
         super(aGraph);
+    }
+
+    public Ant_VRP(DataModel aGraph, List<Integer> input_locations)
+    {
+        super(aGraph, input_locations);
     }
 
     public ArrayList<Integer> nextLocation(PheremoneModel model, ArrayList<Integer> avalible_locations)
