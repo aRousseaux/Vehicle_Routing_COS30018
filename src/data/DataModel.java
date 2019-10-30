@@ -38,7 +38,7 @@ public class DataModel
 		for ( int i = 0; i < aNumLocations; i++ )
 		{
 			// set each locations x, y
-			fLocations.add( new Location( lRand.nextInt( 1000 ), lRand.nextInt( 1000 ) ) );
+			fLocations.add( new Location( i, lRand.nextInt( 1000 ), lRand.nextInt( 1000 ) ) );
 		}
 	}
 	

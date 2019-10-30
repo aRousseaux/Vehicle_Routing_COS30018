@@ -6,6 +6,7 @@ import data.PheremoneModel;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ACORouter extends GenericRouter
@@ -14,7 +15,7 @@ public class ACORouter extends GenericRouter
 	public final int fIterations = 100;
 	public static int fNumAnts;
 	protected ArrayList<Integer> avalible_locations;
-	public List<Ant> fAnts;
+	public List<Ant_VRP> fVRPAnts;
 	public PheremoneModel fGraph;
 	protected DataModel fDataModel;
 
@@ -30,53 +31,6 @@ public class ACORouter extends GenericRouter
 		fDataModel = (DataModel) getArguments()[0];
 	}
 
-	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance) 
-	{
-		// initialize
-		fAnts = new ArrayList<Ant>();
-		Ant lBestAnt = null;
-		int lBestPathLength = 0;
-
-		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), 2);
-		fDataModel = fGraph;
-		fNumAnts = (int) Math.pow(fDataModel.numLocations(), 2);
-
-		for (int i = 0; i < fNumAnts; i++)
-		{
-			fAnts.add( new Ant( fDataModel ) );
-		}
-
-		avalible_locations = new ArrayList<Integer>();
-
-		for (int i = 0; i < fDataModel.numLocations(); i++)
-		{
-			for (int j = 0; j < fDataModel.numLocations(); j++)
-			{
-				System.out.print(fDataModel.getDistanceMatrix()[i][j] +  ", ");
-			}
-			System.out.println();
-		}
-
-		for ( int t = 0; t < fIterations; t++ )
-		{
-			ConstructSolutions();
-			UpdateTrails();
-
-			for (int i = 0; i < fDataModel.numLocations(); i++)
-			{
-				for (int j = 0; j < fDataModel.numLocations(); j++)
-				{
-					System.out.print(fGraph.getPheremone(i, j) +  ", ");
-				}
-				System.out.println();
-			}
-
-			System.out.println();
-		}
-
-		return getSolutions();	
-	}
-
 	public void ConstructSolutions()
 	{
 		avalible_locations = new ArrayList<Integer>();
@@ -89,7 +43,7 @@ public class ACORouter extends GenericRouter
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
-			for (Ant lAnts : fAnts)
+			for (Ant_VRP lAnts : fVRPAnts)
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
 
@@ -97,9 +51,16 @@ public class ACORouter extends GenericRouter
 			}
 		}
 
+		for (Ant_VRP lAnts : fVRPAnts)
+		{
+			System.out.println("Path: " + lAnts.getPath());
+		}
+
+
+
 		if (avalible_locations.size() <= 0)
 		{
-			for (Ant jAnts : fAnts)
+			for (Ant_VRP jAnts : fVRPAnts)
 			{
 				fGraph = jAnts.updateModel(fGraph);
 
@@ -131,10 +92,16 @@ public class ACORouter extends GenericRouter
 			avalible_locations.add(i);
 		}
 
+		ArrayList<Ant_VRP> return_ants = new ArrayList<Ant_VRP>();
+		for (int i = 0; i < fDataModel.numVehicles(); i++)
+		{
+			return_ants.add(new Ant_VRP(fDataModel));
+		}
+
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
-			for (Ant lAnts : fAnts)
+			for (Ant_VRP lAnts : return_ants)
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
 
@@ -145,7 +112,7 @@ public class ACORouter extends GenericRouter
 		int count = 0;
 		if (avalible_locations.size() <= 0)
 		{
-			for (Ant jAnts : fAnts)
+			for (Ant jAnts : return_ants)
 			{
 				fGraph = jAnts.updateModel(fGraph);
 
@@ -154,6 +121,8 @@ public class ACORouter extends GenericRouter
 					jAnts.total_distance_travelled = total_distance;
 				}
 
+				System.out.println(Arrays.toString(jAnts.getPathArray()));
+				System.out.println(count);
 				return_array[count] = jAnts.getPathArray();
 				count++;
 			}
@@ -193,4 +162,50 @@ public class ACORouter extends GenericRouter
 		}
 	}
 
+	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
+	{
+		// initialize
+		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), 1);
+		fDataModel = fGraph;
+		fVRPAnts = new ArrayList<Ant_VRP>();
+		fNumAnts = fGraph.numVehicles();
+
+		for (int i = 0; i < fNumAnts; i++)
+		{
+			fVRPAnts.add( new Ant_VRP( fDataModel ) );
+		}
+
+		avalible_locations = new ArrayList<Integer>();
+
+		Ant lBestAnt = null;
+		int lBestPathLength = 0;
+
+		for (int i = 0; i < fDataModel.numLocations(); i++)
+		{
+			for (int j = 0; j < fDataModel.numLocations(); j++)
+			{
+				System.out.print(fDataModel.getDistanceMatrix()[i][j] +  ", ");
+			}
+			System.out.println();
+		}
+
+		for ( int t = 0; t < fIterations; t++ )
+		{
+			ConstructSolutions();
+			//UpdateTrails();
+
+			for (int i = 0; i < fDataModel.numLocations(); i++)
+			{
+				for (int j = 0; j < fDataModel.numLocations(); j++)
+				{
+					System.out.print(fGraph.getPheremone(i, j) +  ", ");
+				}
+				System.out.println();
+			}
+
+			System.out.println();
+		}
+
+		return getSolutions();
+	}
 }
