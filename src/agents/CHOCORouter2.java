@@ -92,7 +92,8 @@ public class CHOCORouter2 extends CHOCORouter
         }
         else
         {
-            lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity()), true).post();
+            lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity() - 1), true).post();
+            lModel.atMostNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity() + 1), true).post();
         }
 
         lModel.setObjective(lModel.MINIMIZE, total_distance);

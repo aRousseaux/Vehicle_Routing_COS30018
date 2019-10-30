@@ -1,6 +1,7 @@
 package agents;
 
 import data.DataModel;
+import data.Location;
 import data.PheremoneModel;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class Ant_VRP extends Ant {
                     values += model.getPheremone(current_location_id, avalible_locations.get(i)) * 10000 / model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
                 }
 
-                if (values >= random_crossover_value) {
+                if (values >= random_crossover_value)
+                {
                     total_distance_travelled += fDataModel.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
                     location_mapping[current_location_id] = avalible_locations.get(i);
 
@@ -87,5 +89,26 @@ public class Ant_VRP extends Ant {
         }
 
         return max_value;
+    }
+
+    public int getClosestLocation(Location current_location, ArrayList<Integer> avaliable_locations)
+    {
+        int closest_distance = 0;
+        int closest_index = 0;
+        for (int i = 0; i < avaliable_locations.size(); i++)
+        {
+            if (closest_distance == 0)
+            {
+                closest_distance = fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)];
+            }
+
+            if (closest_distance > fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)])
+            {
+                closest_distance = fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)];
+                closest_index = i;
+            }
+        }
+
+        return closest_index;
     }
 }
