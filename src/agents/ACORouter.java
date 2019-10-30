@@ -7,6 +7,7 @@ import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ACORouter extends GenericRouter
@@ -41,6 +42,12 @@ public class ACORouter extends GenericRouter
 			avalible_locations.add(i);
 		}
 
+		Collections.shuffle(avalible_locations);
+		while (avalible_locations.size() > fDataModel.getTotalCapacity())
+		{
+			avalible_locations.remove(0);
+		}
+
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
@@ -71,6 +78,8 @@ public class ACORouter extends GenericRouter
 			{
 				avalible_locations.add(i);
 			}
+
+			Collections.shuffle(avalible_locations);
 		}
 	}
 
@@ -85,6 +94,8 @@ public class ACORouter extends GenericRouter
 		{
 			avalible_locations.add(i);
 		}
+
+		Collections.shuffle(avalible_locations);
 
 		ArrayList<Ant_VRP> return_ants = new ArrayList<Ant_VRP>();
 		for (int i = 0; i < fDataModel.numVehicles(); i++)
@@ -126,6 +137,8 @@ public class ACORouter extends GenericRouter
 			{
 				avalible_locations.add(i);
 			}
+
+			Collections.shuffle(avalible_locations);
 		}
 
 		return return_array;

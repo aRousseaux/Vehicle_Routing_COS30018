@@ -16,10 +16,11 @@ import java.util.Random;
 
 public class Ant
 {
-    private List<Integer> unvisited_locations;
+    protected List<Integer> unvisited_locations;
 
     protected Location fCurrentLocation;
     protected DataModel fDataModel;
+    protected int intial_locations_size;
 
     //keeps track of how far the ant has travelled for it's current journey
     protected int total_distance_travelled;
@@ -36,6 +37,8 @@ public class Ant
             unvisited_locations.add(i);
         }
 
+        intial_locations_size = unvisited_locations.size();
+
         location_mapping = new int[aGraph.numLocations()];
 
         fDataModel = aGraph;
@@ -46,6 +49,7 @@ public class Ant
     {
         total_distance_travelled = 0;
         unvisited_locations = input_locations;
+        intial_locations_size = unvisited_locations.size();
 
         location_mapping = new int[aGraph.numLocations()];
 
@@ -89,6 +93,11 @@ public class Ant
 
                     final int selected_index = i;
                     unvisited_locations.removeIf(n -> (n == unvisited_locations.get(selected_index)));
+
+                    if (fDataModel.numLocations() - intial_locations_size ==  unvisited_locations.size())
+                    {
+                        unvisited_locations.removeAll(unvisited_locations);
+                    }
 
                     if (unvisited_locations.size() <= 1)
                     {

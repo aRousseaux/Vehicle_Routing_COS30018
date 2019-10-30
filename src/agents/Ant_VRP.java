@@ -49,6 +49,10 @@ public class Ant_VRP extends Ant {
                     final int selected_index = i;
 
                     avalible_locations.removeIf(n -> (n == avalible_locations.get(selected_index).intValue()));
+                    if (fDataModel.numLocations() - intial_locations_size ==  avalible_locations.size())
+                    {
+                        avalible_locations.removeAll(avalible_locations);
+                    }
 
                     //probably can be condensed to this!
                     //avalible_locations.remove(i);
