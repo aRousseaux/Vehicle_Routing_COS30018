@@ -17,6 +17,8 @@ public class Ant
 	protected DataModel fDataModel;
 	protected int fInitialLocationSize;
 
+	protected int fReferenceVehicleID;
+
 	//keeps track of how far the ant has travelled for it's current journey
 	protected int fTotalDistance;
 	protected int[] fLocationMapping;
@@ -41,11 +43,43 @@ public class Ant
 		fCurrentLocation = fDataModel.getLocation(0);
 	}
 
+	public Ant(DataModel aGraph, int aReferenceVehicleID)
+	{
+		fTotalDistance = 0;
+		fUnvisited = new ArrayList<Integer>();
+		fReferenceVehicleID = aReferenceVehicleID;
+
+		for (int i = 0; i < aGraph.numLocations(); i++)
+		{
+			fUnvisited.add(i);
+		}
+
+		fInitialLocationSize = fUnvisited.size();
+
+		fLocationMapping = new int[aGraph.numLocations()];
+
+		fDataModel = aGraph;
+		fCurrentLocation = fDataModel.getLocation(0);
+	}
+
 	public Ant(DataModel aGraph, List<Integer> aLocations)
 	{
 		fTotalDistance = 0;
 		fUnvisited = aLocations;
 		fInitialLocationSize = fUnvisited.size();
+
+		fLocationMapping = new int[aGraph.numLocations()];
+
+		fDataModel = aGraph;
+		fCurrentLocation = fDataModel.getLocation(0);
+	}
+
+	public Ant(DataModel aGraph, List<Integer> aLocations, int aReferenceVehicleID)
+	{
+		fTotalDistance = 0;
+		fUnvisited = aLocations;
+		fInitialLocationSize = fUnvisited.size();
+		fReferenceVehicleID = aReferenceVehicleID;
 
 		fLocationMapping = new int[aGraph.numLocations()];
 

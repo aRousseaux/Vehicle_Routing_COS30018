@@ -82,6 +82,24 @@ public class DataModel
 		fPackagesByWeight = aPackagesByWeight;
 	}
 
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] aCapacity, Boolean aPackagesByWeight,  boolean aNormalDist)
+	{
+		fVehicles = new ArrayList< Vehicle >();
+		fSeed = aSeed;
+
+		for ( int i = 0; i < aVehicleNumber; i ++ )
+		{
+			fVehicles.add( new Vehicle( i, aCapacity[i], 8 ) );
+		}
+
+		generateLocations( aNumLocations, aSeed );
+
+		// update distance matrix
+		calculateDistances();
+
+		fPackagesByWeight = aPackagesByWeight;
+	}
+
 	public Boolean getfPackagesByWeight()
 	{
 		return fPackagesByWeight;
