@@ -1,9 +1,9 @@
 
 package data;
 
-		import java.util.ArrayList;
-		import java.util.List;
-		import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DataModel
 {
@@ -40,10 +40,10 @@ public class DataModel
 		// generate the vehicle representation
 		if ( aNormalDist )
 		{
-			Random lRand = new Random();
+			Random lRand = new Random( aSeed );
 			for ( int i = 0; i < aVehicleNumber; i ++ )
 			{
-				fVehicles.add( new Vehicle( i, (int) ( Math.abs(aCapacity * lRand.nextGaussian()) ), 8 ) );
+				fVehicles.add( new Vehicle( i, (int) ( aCapacity * ( Math.abs(lRand.nextGaussian()) ) ), 8 ) );
 				System.out.println("Vehicle capacity: "+fVehicles.get(i).getCapacity());
 			}
 		}
