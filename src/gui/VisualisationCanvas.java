@@ -93,6 +93,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				if (fPathsChecksum != lLocationResult.getDouble("Checksum"))
 				{
 					fPathsChecksum = lLocationResult.getDouble("Checksum");
+					Thread.sleep(50); // allow concurrent updates to occur
 					updatePaths();
 				}
 			} 
@@ -135,11 +136,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			{
 				gg.drawLine
 				(
-						fLocations.get(fPaths.get(i).get(j)).x + 5, 
-						fLocations.get(fPaths.get(i).get(j)).y + 5,
-						fLocations.get(fPaths.get(i).get(j + 1)).x + 5, 
-						fLocations.get(fPaths.get(i).get(j + 1)).y + 5
-						);
+					fLocations.get(fPaths.get(i).get(j)).x + 5, 
+					fLocations.get(fPaths.get(i).get(j)).y + 5,
+					fLocations.get(fPaths.get(i).get(j + 1)).x + 5, 
+					fLocations.get(fPaths.get(i).get(j + 1)).y + 5
+				);
 			}
 		}
 
