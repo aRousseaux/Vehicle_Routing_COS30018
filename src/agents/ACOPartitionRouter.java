@@ -114,7 +114,7 @@ public class ACOPartitionRouter extends ACORouter
 		//the partitions are assigned to the ants present, looping through all the partitions, before resetting back to the first partition
 		for (int i = 0; i < fNumAnts; i++)
 		{
-			fVRPAnts.add( new Ant_VRP(fDataModel, (ArrayList<Integer>) ant_routes[counter].clone(), (fDataModel.numVehicles()  - 1) % i));
+			fVRPAnts.add( new Ant_VRP(fDataModel, (ArrayList<Integer>) ant_routes[counter].clone(), (fDataModel.numVehicles()  - 1) % (i + 1)));
 			counter++;
 			if (counter >= ant_routes.length)
 			{

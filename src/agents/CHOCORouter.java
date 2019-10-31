@@ -40,6 +40,11 @@ public class CHOCORouter extends GenericRouter
 
 		IntVar[][] lVehiclePackages = lModel.intVarMatrix(aDataModel.numLocations(), aDataModel.numVehicles(), 0, 1);
 
+		for (int i = 0; i < aDataModel.numVehicles(); i++)
+		{
+			lModel.sum((IntVar[]) getColumn(lVehiclePackages, i), "<=", aDataModel.getVehicle(i).getCapacity()).post();
+		}
+
 		if (aDataModel.getTotalCapacity() >= aDataModel.numLocations())
 		{
 			for (int i = 0; i < lVehiclePackages.length; i++)
@@ -50,17 +55,6 @@ public class CHOCORouter extends GenericRouter
 		else
 		{
 			lModel.sum(MatrixToArray(lVehiclePackages), "=", aDataModel.getTotalCapacity()).post();
-
-			for (int i = 0; i < aDataModel.numVehicles(); i++)
-			{
-				lModel.sum(getColumn(lVehiclePackages, i), "=", aDataModel.getCapacities()[i]).post();
-			}
-		}
-
-
-		for (int i = 0; i < aDataModel.numVehicles(); i++)
-		{
-			lModel.sum((IntVar[]) getColumn(lVehiclePackages, i), "<=", aDataModel.getVehicle(i).getCapacity()).post();
 		}
 
 		for (int i = 0; i < lVehicleLocations.length; i++)
