@@ -43,8 +43,8 @@ public class DataModel
 			Random lRand = new Random();
 			for ( int i = 0; i < aVehicleNumber; i ++ )
 			{
-				
-				fVehicles.add( new Vehicle( i, (int) (aCapacity * lRand.nextGaussian()), 8 ) );
+				fVehicles.add( new Vehicle( i, (int) ( Math.abs(aCapacity * lRand.nextGaussian()) ), 8 ) );
+				System.out.println("Vehicle capacity: "+fVehicles.get(i).getCapacity());
 			}
 		}
 		else
