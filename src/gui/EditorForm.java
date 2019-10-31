@@ -19,7 +19,7 @@ import data.DataModel;
 public class EditorForm extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private TextField fLocations;
 	private TextField fVehicles;
 	private TextField fCapacity;
@@ -29,20 +29,20 @@ public class EditorForm extends JPanel
 	private JCheckBox fNormality;
 	private JButton fSubmit;
 	private JButton fDefaults;
-	
+
 	public EditorForm( RoutingFrame aRoutingFrame )
 	{
 		this.setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints lConstraints = new GridBagConstraints();
 		lConstraints.fill = GridBagConstraints.HORIZONTAL;
-		
+
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 0;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(new JLabel("Locations:"), lConstraints);
-		
+
 		fLocations = new TextField();
 		lConstraints.gridx = 1;
 		lConstraints.gridy = 0;
@@ -55,7 +55,7 @@ public class EditorForm extends JPanel
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(new JLabel("Vehicles:"), lConstraints);
-		
+
 		fVehicles = new TextField();
 		lConstraints.gridx = 1;
 		lConstraints.gridy = 1;
@@ -75,20 +75,20 @@ public class EditorForm extends JPanel
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fCapacity, lConstraints);
-		
+
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 3;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(new JLabel("Seed:"), lConstraints);
-		
+
 		fSeed = new TextField();
 		lConstraints.gridx = 1;
 		lConstraints.gridy = 3;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fSeed, lConstraints);
-		
+
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 4;
 		lConstraints.gridheight = 1;
@@ -121,7 +121,7 @@ public class EditorForm extends JPanel
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fCargoWeight, lConstraints);
-		
+
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 6;
 		lConstraints.gridheight = 1;
@@ -134,7 +134,7 @@ public class EditorForm extends JPanel
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fNormality, lConstraints);
-		
+
 		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 7;
@@ -142,7 +142,7 @@ public class EditorForm extends JPanel
 		lConstraints.gridwidth = 2;
 		fSubmit.addActionListener( e -> onSubmit( aRoutingFrame ) );
 		this.add(fSubmit, lConstraints);
-		
+
 		fDefaults = new JButton("Default");
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 8;
@@ -169,16 +169,16 @@ public class EditorForm extends JPanel
 		}
 		catch (Exception e) { e.printStackTrace(); }
 	}
-	
+
 	private void onDefault( RoutingFrame aRoutingFrame )
 	{
 		try
 		{
 			InputStream lDefaults = new FileInputStream("Defaults/config.properties");
-			
+
 			Properties lProperties = new Properties();
 			lProperties.load(lDefaults);
-			
+
 			DataModel lDataModel = new DataModel
 			(
 				Integer.parseInt(lProperties.getProperty("vehicles")), 

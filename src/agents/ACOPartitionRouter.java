@@ -2,7 +2,6 @@
 package agents;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,14 +46,14 @@ public class ACOPartitionRouter extends ACORouter
 	{
 		double a = 1000;
 		double b = 1000;
-		
+
 		for (int i = 1; i < ( aDataModel.numVehicles() / 2 ); i++)
 		{
 			// divide the rectangle a by b into two rectangles of the size...
 			double ap = a * ( (i / aDataModel.numVehicles()) * b);
 			double bp = a * ( ( ( aDataModel.numVehicles() - i ) / aDataModel.numVehicles() ) * b);
 			// parallel to a
-			
+
 			// use the table to get the best i-decomposition of the new rectangles
 			double lKValue = fKPartitionTable[aDataModel.numVehicles()];
 		}

@@ -22,16 +22,16 @@ public class RoutingFrame extends JFrame
 	public RoutingFrame(String aTitle)
 	{
 		super(aTitle);
-		
+
 		// window decorations
 		JFrame.setDefaultLookAndFeelDecorated( true );
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		
+
 		// grid back layout
 		getContentPane().setLayout( new GridBagLayout() );
 		GridBagConstraints lConstraints = new GridBagConstraints();
 		lConstraints.fill = GridBagConstraints.HORIZONTAL;
-		
+
 		// add visualization to the GUI frame
 		fVisualisation = new VisualisationCanvas();
 		lConstraints.gridx = 0;
@@ -39,7 +39,7 @@ public class RoutingFrame extends JFrame
 		lConstraints.gridheight = 2;
 		lConstraints.gridwidth = 1;
 		add( fVisualisation, lConstraints );
-		
+
 		// add form to the frame
 		fForm = new EditorForm(this);
 		lConstraints.gridx = 1;
@@ -54,20 +54,20 @@ public class RoutingFrame extends JFrame
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		add( fInformation, lConstraints );
-		
+
 		// resize window to fit all
 		pack();
 	}
-	
+
 	public void onSubmit( DataModel aDataModel, String aMethod ) throws StaleProxyException
 	{
 		if (fController != null)
 		{
 			fController.shutdown();
 		}
-		
+
 		fInformation.updateDataModel( aDataModel );
-		
+
 		fController = new Controller( aDataModel, aMethod );
 
 	}

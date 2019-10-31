@@ -18,16 +18,16 @@ public class CHOCORouter extends GenericRouter
 	public CHOCORouter()
 	{
 		registerO2AInterface(Router.class, this);
-		
+
 		fSelectedAgents = new ArrayList<AMSAgentDescription>();
 	}
-	
+
 	protected void setup()
 	{
 		fDataModel = (DataModel) getArguments()[0];
 	}
 
-	//solves teh best routes for drivers, within the constraint of already assigned packages
+	//solves the best routes for drivers, within the constraint of already assigned packages
 	public int[][] solveRoute( DataModel aDataModel, int aMaxRouteDistance ) 
 	{
 		// Model

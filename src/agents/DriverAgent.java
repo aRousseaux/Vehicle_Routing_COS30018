@@ -17,23 +17,23 @@ import jade.lang.acl.ACLMessage;
 public class DriverAgent extends Agent 
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private DataModel fDataModel;
 	private int fIdentification;
-	
+
 	private int fLocationIndex;
 	private Point fPosition;
 	private int[] fRoute;
-	
+
 	private AMSAgentDescription[] fAgents;
 	private AMSAgentDescription fDBAgent;
 	private AMSAgentDescription fMasterAgent;
 
 	private static final Logger fLogger = Logger.getGlobal();
-	
+
 	protected void setup()
 	{
-		fLogger.info("Agent " + getLocalName() + " started.");
+		//fLogger.info("Agent " + getLocalName() + " started.");
 
 		Object[] args = getArguments();
 
@@ -98,7 +98,7 @@ public class DriverAgent extends Agent
 				block();
 			}
 		});
-		
+
 		// advance position, by a specified velocity
 		// know when has agent arrived at it's target location
 
@@ -268,7 +268,7 @@ public class DriverAgent extends Agent
 				block();
 			}
 		});
-		
+
 		// send out agent location
 		//ever 0.5 seconds a message is sent to the Database agent regarding the driver's current position
 		addBehaviour(new TickerBehaviour(this, 500) 
@@ -304,13 +304,13 @@ public class DriverAgent extends Agent
 				if (fAgents[i].getName().toString().contains("MasterRouteAgent"))
 				{
 					fMasterAgent = fAgents[i];
-					System.out.println(fMasterAgent.getName());
+					//System.out.println(fMasterAgent.getName());
 				}
 
 				if (fAgents[i].getName().toString().contains("DBAgent"))
 				{
 					fDBAgent = fAgents[i];
-					System.out.println(fDBAgent.getName());
+					//System.out.println(fDBAgent.getName());
 				}
 			}
 		}

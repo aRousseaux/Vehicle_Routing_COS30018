@@ -17,9 +17,9 @@ public abstract class GenericRouter extends Agent implements Router
 
 	protected DataModel fDataModel;
 	protected ArrayList<AMSAgentDescription> fSelectedAgents;
-	
+
 	public abstract int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance);
-	
+
 	public void findDrivers() 
 	{
 		try
@@ -37,7 +37,7 @@ public abstract class GenericRouter extends Agent implements Router
 
 		SearchConstraints sc = new SearchConstraints();
 		sc.setMaxResults(Long.valueOf(-1)); 
-		
+
 		try 
 		{
 			lAgents = AMSService.search(this, new AMSAgentDescription(), sc);
@@ -53,7 +53,7 @@ public abstract class GenericRouter extends Agent implements Router
 		catch (Exception e)	{ e.printStackTrace(); }
 
 		int[][] lSolution = solveRoute(fDataModel, 2000);
-		
+
 		for (int i = 0; i < lSolution.length; i++)
 		{
 			System.out.println("Solution to be sent: " + Arrays.toString(lSolution[i]));
@@ -69,7 +69,7 @@ public abstract class GenericRouter extends Agent implements Router
 					break;
 				}
 			}
-			
+
 			for (int j = 0; j < fSelectedAgents.size(); j++)
 			{
 				if (fSelectedAgents.get(i).getName().getLocalName().contains("MasterRouteAgent" + String.valueOf(j)))

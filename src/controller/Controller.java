@@ -17,17 +17,17 @@ public class Controller implements Runnable
 	private ContainerController fContainerCtrl;
 	private AgentController fDBAgentCtrl;
 	private AgentController fRouteAgentCtrl;
-	
+
 	public Controller( DataModel aDataModel, String aRoutingMethod )
 	{
 		// get a hold to the JADE runtime
 		Runtime rt = Runtime.instance();
-		
+
 		// launch the main container listening on port 8888
 		Profile pMain = new ProfileImpl(null, 8888, null);
-		pMain.setParameter(Profile.GUI, "true");
+		pMain.setParameter(Profile.GUI, "false");
 		fContainerCtrl = rt.createMainContainer(pMain);
-		
+
 		// create database agent
 		try 
 		{
@@ -37,11 +37,11 @@ public class Controller implements Runnable
 				DatabaseAgent.class.getName(), 
 				new Object[]{ aDataModel }
 			);
-			
+
 			fDBAgentCtrl.start();
 		} 
 		catch ( StaleProxyException e ) { e.printStackTrace(); }
-		
+
 		// create drivers
 		for ( int i = 0; i < aDataModel.numVehicles(); i++ )
 		{
@@ -50,17 +50,17 @@ public class Controller implements Runnable
 			try 
 			{
 				delivery = fContainerCtrl.createNewAgent
-				(
-					"Delivery_Agent" + i,
-					DriverAgent.class.getName(),
-					new Object[]{aDataModel, i}
-				);
+						(
+								"Delivery_Agent" + i,
+								DriverAgent.class.getName(),
+								new Object[]{aDataModel, i}
+								);
 
 				delivery.start();
 			} 
 			catch (StaleProxyException e) {	e.printStackTrace(); }
 		}
-		
+
 		// create master
 		try
 		{
@@ -90,7 +90,7 @@ public class Controller implements Runnable
 			fRouteAgentCtrl.start();
 		}
 		catch( StaleProxyException e ) { e.printStackTrace(); }
-		
+
 		// initialize thread
 		fThread = new Thread(this);
 		fThread.start();
@@ -102,13 +102,13 @@ public class Controller implements Runnable
 		{
 			// wait for drivers to initialize
 			Thread.sleep(2000);
-			
+
 			// grab interface
 			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
 
 			//records start time of solver
 			long lStart = System.currentTimeMillis();
-			
+
 			// solve and distribute routes
 			lMasterInterface.distributeRoutes();
 
@@ -120,7 +120,7 @@ public class Controller implements Runnable
 		} 
 		catch ( InterruptedException | StaleProxyException e ) { e.printStackTrace(); }
 	}
-	
+
 	// delete thread, terminates controller
 	public void shutdown() throws StaleProxyException
 	{
