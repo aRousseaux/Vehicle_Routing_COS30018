@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +25,7 @@ public class EditorForm extends JPanel
 	private TextField fCapacity;
 	private TextField fSeed;
 	private JComboBox<String> fRoutingMethods;
+	private JCheckBox fNormality;
 	private JButton fSubmit;
 	private JButton fDefaults;
 	
@@ -106,9 +108,22 @@ public class EditorForm extends JPanel
 		lConstraints.gridwidth = 1;
 		this.add(fRoutingMethods, lConstraints);
 
-		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 5;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(new JLabel("Capacity Dist:"), lConstraints);
+
+		fNormality = new JCheckBox();
+		lConstraints.gridx = 1;
+		lConstraints.gridy = 5;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(fNormality, lConstraints);
+		
+		fSubmit = new JButton("Submit");
+		lConstraints.gridx = 0;
+		lConstraints.gridy = 6;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fSubmit.addActionListener( e -> onSubmit( aRoutingFrame ) );
@@ -116,7 +131,7 @@ public class EditorForm extends JPanel
 		
 		fDefaults = new JButton("Default");
 		lConstraints.gridx = 0;
-		lConstraints.gridy = 6;
+		lConstraints.gridy = 7;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fDefaults.addActionListener( e -> onDefault( aRoutingFrame ) );
