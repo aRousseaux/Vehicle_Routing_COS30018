@@ -188,8 +188,9 @@ public class KMeans
 			{
 				double newX = sumX / n_points;
 				double newY = sumY / n_points;
-				centroid.x = (int) (newX);
-				centroid.y = (int) (newY);
+				cluster.setCentroid(new Location((int)newX, (int)newY));
+				//centroid.x = (int) (newX);
+				//centroid.y = (int) (newY);
 			}
 		}
 	}

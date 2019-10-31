@@ -56,6 +56,7 @@ public class Cluster
 	{
 		System.out.println("[Cluster: " + id+"]");
 		System.out.println("[Centroid: " + centroid + "]");
+		System.out.println(points.size());
 		System.out.println("[Points: \n");
 		for(Location p : points) {
 			System.out.println(p);

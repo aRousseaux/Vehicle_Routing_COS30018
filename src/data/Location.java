@@ -15,7 +15,8 @@ public class Location
 	private int fLocationID; //Primary ID for location, uses for identification
 	public int fCapacity;
 
-	public int getfLocationID() {
+	public int getfLocationID() 
+	{
 		return fLocationID;
 	}
 
@@ -67,5 +68,16 @@ public class Location
 	public int getCapacity()
 	{
 		return fCapacity;
+	}
+	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		sb.append(x);
+		sb.append(",");
+		sb.append(y);
+		sb.append(")");
+		return sb.toString();
 	}
 }
