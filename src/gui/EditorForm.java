@@ -25,6 +25,7 @@ public class EditorForm extends JPanel
 	private TextField fCapacity;
 	private TextField fSeed;
 	private JComboBox<String> fRoutingMethods;
+	private JCheckBox fCargoWeight;
 	private JCheckBox fNormality;
 	private JButton fSubmit;
 	private JButton fDefaults;
@@ -112,18 +113,31 @@ public class EditorForm extends JPanel
 		lConstraints.gridy = 5;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
+		this.add(new JLabel("Capacity Weight:"), lConstraints);
+
+		fCargoWeight = new JCheckBox();
+		lConstraints.gridx = 1;
+		lConstraints.gridy = 5;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(fCargoWeight, lConstraints);
+		
+		lConstraints.gridx = 0;
+		lConstraints.gridy = 6;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
 		this.add(new JLabel("Capacity Dist:"), lConstraints);
 
 		fNormality = new JCheckBox();
 		lConstraints.gridx = 1;
-		lConstraints.gridy = 5;
+		lConstraints.gridy = 6;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fNormality, lConstraints);
 		
 		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
-		lConstraints.gridy = 6;
+		lConstraints.gridy = 7;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fSubmit.addActionListener( e -> onSubmit( aRoutingFrame ) );
@@ -131,7 +145,7 @@ public class EditorForm extends JPanel
 		
 		fDefaults = new JButton("Default");
 		lConstraints.gridx = 0;
-		lConstraints.gridy = 7;
+		lConstraints.gridy = 8;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fDefaults.addActionListener( e -> onDefault( aRoutingFrame ) );
@@ -147,7 +161,9 @@ public class EditorForm extends JPanel
 				Integer.parseInt(fVehicles.getText()), 
 				Integer.parseInt(fLocations.getText()), 
 				Integer.parseInt(fSeed.getText()), 
-				Integer.parseInt(fCapacity.getText())
+				Integer.parseInt(fCapacity.getText()),
+				fCargoWeight.isSelected(),
+				fNormality.isSelected()
 			);
 			aRoutingFrame.onSubmit( lDataModel, (String) fRoutingMethods.getSelectedItem() );
 		}
