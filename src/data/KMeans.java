@@ -17,18 +17,18 @@ public class KMeans
 	//private int NUM_CLUSTERS = 3; (data model num vehicles)
 	
 	//Number of Points
-	private int NUM_POINTS = 15;
+	//private int NUM_POINTS = 15;
 	
 	//Min and Max X and Y
-	private static final int MIN_COORDINATE = 0;
-	private static final int MAX_COORDINATE = 10;
+	//private static final int MIN_COORDINATE = 0;
+	//private static final int MAX_COORDINATE = 10;
 
 	private List<Cluster> clusters;
 	private DataModel fDataModel; // locations are points
 
 	public KMeans(DataModel aDataModel) 
 	{
-		this.clusters = new ArrayList();
+		clusters = new ArrayList<Cluster>();
 		
 		fDataModel = aDataModel;
 		init();
@@ -76,7 +76,7 @@ public class KMeans
 			//Clear cluster state
 			clearClusters();
 
-			List lastCentroids = getCentroids();
+			List<Location> lastCentroids = getCentroids();
 
 			//Assign points to the closer cluster
 			assignCluster();
@@ -86,13 +86,13 @@ public class KMeans
 
 			iteration++;
 
-			List currentCentroids = getCentroids();
+			List<Location> currentCentroids = getCentroids();
 
 			//Calculates total distance between new and old Centroids
 			double distance = 0;
 			for(int i = 0; i < lastCentroids.size(); i++) 
 			{
-				distance += fDataModel.getDistanceMatrix()[(int) lastCentroids.get(i)][(int) currentCentroids.get(i)];
+				distance += fDataModel.getDistance(lastCentroids.get(i), currentCentroids.get(i));
 			}
 			
 			System.out.println("#################");
@@ -114,9 +114,9 @@ public class KMeans
 		}
 	}
 
-	private List getCentroids() 
+	private List<Location> getCentroids() 
 	{
-		List centroids = new ArrayList(fDataModel.numVehicles());
+		List<Location> centroids = new ArrayList(fDataModel.numVehicles());
 		
 		for(Cluster cluster : clusters) 
 		{
@@ -156,8 +156,12 @@ public class KMeans
 			for (int j = 0; j < fDataModel.numVehicles(); j++)
 			{
 				Cluster c = clusters.get(j);
-				//distance = Point.distance(point, c.getCentroid());
-				//fDataModel.getDistanceMatrix()[(int) lastCentroids.get(i)][(int) currentCentroids.get(i)]
+				distance = fDataModel.getDistance(fDataModel.getLocation(i), c.getCentroid());
+				if(distance< min)
+				{
+					min = distance;
+					cluster = i;
+				}
 			}
 		}
 	}
@@ -168,23 +172,23 @@ public class KMeans
 		{
 			double sumX = 0;
 			double sumY = 0;
-			List list = cluster.getPoints();
+			List<Location> list = cluster.getPoints();
 			int n_points = list.size();
 
-			/*for(Point point : list) 
+			for(Location point : list) 
 			{
-				sumX += point.getX();
-				sumY += point.getY();
+				sumX += point.x;
+				sumY += point.y;
 			}
 
-			Point centroid = cluster.getCentroid();
+			Location centroid = cluster.getCentroid();
 			if(n_points > 0) 
 			{
 				double newX = sumX / n_points;
 				double newY = sumY / n_points;
-				centroid.setX(newX);
-				centroid.setY(newY);
-			}*/
+				centroid.x = (int) (newX);
+				centroid.y = (int) (newY);
+			}
 		}
 	}
 }

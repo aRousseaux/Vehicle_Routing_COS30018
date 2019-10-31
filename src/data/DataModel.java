@@ -197,4 +197,16 @@ public class DataModel
 
 		return return_capacity;
 	}
+	
+	public int getDistance(Location aLocation1, Location aLocation2)
+	{
+		int x1 = aLocation1.x;
+		int y1 = aLocation1.y;
+
+		int x2 = aLocation2.x;
+		int y2 = aLocation2.y;
+
+		// Distance formula
+		return (int) Math.sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
+	}
 }

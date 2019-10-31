@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import data.DataModel;
+import data.KMeans;
 
 public class EditorForm extends JPanel
 {
@@ -165,6 +166,9 @@ public class EditorForm extends JPanel
 				fCargoWeight.isSelected(),
 				fNormality.isSelected()
 			);
+			
+			KMeans test = (new KMeans(lDataModel));
+			
 			aRoutingFrame.onSubmit( lDataModel, (String) fRoutingMethods.getSelectedItem() );
 		}
 		catch (Exception e) { e.printStackTrace(); }
