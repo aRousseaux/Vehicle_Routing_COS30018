@@ -63,8 +63,6 @@ public class CHOCORouter2 extends CHOCORouter
 				for (int k = 1; k < aDataModel.numLocations(); k++)
 				{
 					int y = j - k;
-					//y = k - j;
-
 					if (y < 0)
 					{
 						y += aDataModel.numLocations();

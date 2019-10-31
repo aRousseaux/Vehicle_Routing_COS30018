@@ -124,7 +124,6 @@ public class Ant
 					final int lSelectedIndex = i;
 					fUnvisited.removeIf(n -> (n == fUnvisited.get(lSelectedIndex)));
 
-					System.out.println("OUTPUT: " + getDataModel().getCapacities()[fReferenceVehicleID] + "|" + fUnvisited.size() + "|" + fDataModel.numLocations());
 					if (fDataModel.numLocations() - fInitialLocationSize ==  fUnvisited.size())
 					{
 						fUnvisited.removeAll(fUnvisited);

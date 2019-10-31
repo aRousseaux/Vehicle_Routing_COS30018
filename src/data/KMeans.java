@@ -34,6 +34,10 @@ public class KMeans
 		init();
 	}
 
+	public List<Cluster> getClusters() {
+		return clusters;
+	}
+
 	//Initializes the process
 	public void init() 
 	{
@@ -42,7 +46,7 @@ public class KMeans
 
 		//Create Clusters
 		//Set Random Centroids
-		for (int i = 0; i < fDataModel.numVehicles(); i++) 
+		for (int i = 0; i < fDataModel.numVehicles(); i++)
 		{
 			Cluster cluster = new Cluster(i);
 			//Point centroid = Point.createRandomPoint(MIN_COORDINATE,MAX_COORDINATE);
@@ -96,10 +100,10 @@ public class KMeans
 				distance += fDataModel.getDistance(lastCentroids.get(i), currentCentroids.get(i));
 			}
 			
-			System.out.println("#################");
-			System.out.println("Iteration: " + iteration);
-			System.out.println("Centroid distances: " + distance);
-			plotClusters();
+			//System.out.println("#################");
+			//System.out.println("Iteration: " + iteration);
+			//System.out.println("Centroid distances: " + distance);
+			//plotClusters();
 
 			if(distance == 0) {
 				finish = true;

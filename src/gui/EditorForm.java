@@ -167,7 +167,7 @@ public class EditorForm extends JPanel
 				fNormality.isSelected()
 			);
 			
-			KMeans test = (new KMeans(lDataModel));
+			//KMeans test = (new KMeans(lDataModel));
 			
 			aRoutingFrame.onSubmit( lDataModel, (String) fRoutingMethods.getSelectedItem() );
 		}

@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import data.DataModel;
-import data.Location;
-import data.PheremoneModel;
+import data.*;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 
 public class ACOPartitionRouter extends ACORouter
@@ -42,8 +40,9 @@ public class ACOPartitionRouter extends ACORouter
 	}
 
 
-	private void kPartitionLocations( DataModel aDataModel )
+	private ArrayList<Location>[] kPartitionLocations( DataModel aDataModel )
 	{
+		/*
 		double a = 1000;
 		double b = 1000;
 
@@ -57,6 +56,21 @@ public class ACOPartitionRouter extends ACORouter
 			// use the table to get the best i-decomposition of the new rectangles
 			double lKValue = fKPartitionTable[aDataModel.numVehicles()];
 		}
+		 */
+
+		KMeans kMeans = new KMeans(aDataModel);
+		kMeans.init();
+
+		List<Cluster> clusters = kMeans.getClusters();
+
+		ArrayList<Location>[] cluster_locations = (ArrayList<Location>[]) new ArrayList[aDataModel.numVehicles()];
+
+		for (int i = 0; i < aDataModel.numVehicles(); i++)
+		{
+			cluster_locations[i] = (ArrayList<Location>) clusters.get(i).getPoints();
+		}
+
+		return cluster_locations;
 	}
 
 	//locations are randomly divided to an Array of ArrayLists of Locations, to test underlying ACO functionality
@@ -99,7 +113,8 @@ public class ACOPartitionRouter extends ACORouter
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
 	{
 		// solve each partition
-		ArrayList<Location>[] lPartitions = randomPartition( fDataModel );
+		ArrayList<Location>[] lPartitions = kPartitionLocations( fDataModel );
+		System.out.println("Partition Size: " + lPartitions.length);
 
 		//gets the location_id, from the locations in lPartitions
 		for (int i = 0; i < lPartitions.length; i++)
