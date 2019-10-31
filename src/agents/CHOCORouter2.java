@@ -95,6 +95,11 @@ public class CHOCORouter2 extends CHOCORouter
 		{
 			lModel.atLeastNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity() - 1), true).post();
 			lModel.atMostNValues(routes_as_array, lModel.intVar(aDataModel.getTotalCapacity() + 1), true).post();
+
+			for (int i = 0; i < aDataModel.numVehicles(); i++)
+			{
+			    lModel.atMostNValues(vehicle_routes[i], lModel.intVar(aDataModel.getCapacities()[i] + 1), true).post();
+            }
 		}
 
 		lModel.setObjective(lModel.MINIMIZE, total_distance);

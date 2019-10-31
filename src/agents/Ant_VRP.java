@@ -60,13 +60,13 @@ public class Ant_VRP extends Ant
 					final int lSelectedIndex = i;
 
 					aAvalibleLocations.removeIf(n -> (n == aAvalibleLocations.get(lSelectedIndex).intValue()));
+
 					if (fDataModel.numLocations() - fInitialLocationSize ==  aAvalibleLocations.size())
 					{
-						aAvalibleLocations.removeAll(aAvalibleLocations);
+						//not valid!
+						//aAvalibleLocations.removeAll(aAvalibleLocations);
+						return aAvalibleLocations;
 					}
-
-					//probably can be condensed to this!
-					//avalible_locations.remove(i);
 
 					//this might be the problem!!!!!
 					if (aAvalibleLocations.size() <= 1)

@@ -50,7 +50,13 @@ public class CHOCORouter extends GenericRouter
 		else
 		{
 			lModel.sum(MatrixToArray(lVehiclePackages), "=", aDataModel.getTotalCapacity()).post();
+
+			for (int i = 0; i < aDataModel.numVehicles(); i++)
+			{
+				lModel.sum(getColumn(lVehiclePackages, i), "=", aDataModel.getCapacities()[i]).post();
+			}
 		}
+
 
 		for (int i = 0; i < aDataModel.numVehicles(); i++)
 		{

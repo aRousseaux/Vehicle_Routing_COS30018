@@ -109,7 +109,6 @@ public class ACORouter extends GenericRouter
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
-			System.out.println("Total: " + fDataModel.getTotalCapacity() + "|" + fDataModel.numLocations() + "|" + avalible_locations.size());
 			if (fDataModel.getTotalCapacity() < fDataModel.numLocations() && fDataModel.getTotalCapacity() <= fDataModel.numLocations() - avalible_locations.size())
 			{
 				avalible_locations = new ArrayList<Integer>();
