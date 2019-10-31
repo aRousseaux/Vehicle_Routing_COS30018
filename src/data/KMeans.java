@@ -53,6 +53,7 @@ public class KMeans
 
 		//Print Initial state
 		plotClusters();
+		calculate();
 	}
 
 	private void plotClusters() 
@@ -160,9 +161,10 @@ public class KMeans
 				if(distance< min)
 				{
 					min = distance;
-					cluster = i;
+					cluster = j;
 				}
 			}
+			clusters.get(cluster).addPoint(fDataModel.getLocation(i));
 		}
 	}
 
