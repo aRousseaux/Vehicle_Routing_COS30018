@@ -142,8 +142,18 @@ public class ACOPartitionRouter extends ACORouter
 			UpdateTrails();
 		}
 
+		for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
+		{
+			for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
+			{
+				System.out.print(  fGraph.getPheremone(i, j) + ", ");
+			}
+			System.out.println();
+		}
 
-		for ( Ant lAnts : fVRPAnts ) {
+
+		for ( Ant lAnts : fVRPAnts )
+		{
 			while (lAnts.nextLocation(fGraph))
 			{
 

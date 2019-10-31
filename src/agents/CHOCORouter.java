@@ -117,6 +117,7 @@ public class CHOCORouter extends GenericRouter
 			// no solution
 		}
 
+        lSolver.printShortStatistics();
 		int[][] lReturnRoutes = new int[aDataModel.numVehicles()][];
 		System.out.println("Num vehicle: " + aDataModel.numVehicles());
 

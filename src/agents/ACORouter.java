@@ -169,7 +169,7 @@ public class ACORouter extends GenericRouter
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getPheremone(i,j) < max_value * 0.25)
+				if (fGraph.getPheremone(i,j) < max_value * 0.15)
 				{
 					fGraph.updatePheremonePath(i,j, 0);
 				}
@@ -196,8 +196,17 @@ public class ACORouter extends GenericRouter
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions();
-			//UpdateTrails();
+			UpdateTrails();
 		}
+
+        for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
+        {
+            for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
+            {
+                System.out.print(  fGraph.getPheremone(i, j) + ", ");
+            }
+            System.out.println();
+        }
 
 		return getSolutions();
 	}
