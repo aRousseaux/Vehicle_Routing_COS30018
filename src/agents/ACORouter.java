@@ -152,14 +152,13 @@ public class ACORouter extends GenericRouter
 
 	//prune the pheremone model
 	//if a value is too small is comparison to the largest value in the model, then these pheremone values are set to 0
-	public void UpdateTrails()
+	public void UpdateTrails(int current_iteration)
 	{
 		for (int i = 0; i < fGraph.numLocations(); i++)
 		{
 			float max_value = 0;
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
-				//if (fGraph.getFPathAtIndex(i,j) > max_value)
 				if (fGraph.getPheremone(i, j) > max_value)
 				{
 					max_value = fGraph.getPheremone(i,j);
@@ -169,7 +168,7 @@ public class ACORouter extends GenericRouter
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getPheremone(i,j) < max_value * 0.15)
+				if (fGraph.getPheremone(i,j) < max_value * (current_iteration/fIterations))
 				{
 					fGraph.updatePheremonePath(i,j, 0);
 				}
@@ -196,7 +195,7 @@ public class ACORouter extends GenericRouter
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions();
-			UpdateTrails();
+			UpdateTrails(t);
 		}
 
         for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)

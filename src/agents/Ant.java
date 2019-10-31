@@ -6,6 +6,7 @@ import data.Location;
 import data.PheremoneModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -86,7 +87,7 @@ public class Ant
 		fDataModel = aGraph;
 		fCurrentLocation = fDataModel.getLocation(0);
 	}
-  
+
 	//finds the next locations for the ant, based on the input pheremone model and the remaining locatiosn in unvisited_locations
 	public boolean nextLocation(PheremoneModel aModel)
 	{
@@ -184,8 +185,14 @@ public class Ant
 			{
 				//multiplier is utilized if a ACO elitist algorithm is used
 				float lNewValue = aModel.getPheremone(i, fLocationMapping[i]) +  (aMultiplier * 10000)/fTotalDistance;
+
+				System.out.println(lNewValue + "|" + fTotalDistance + "|" + (aMultiplier * 10000)/fTotalDistance);
+
 				aModel.updatePheremonePath(i, fLocationMapping[i], lNewValue);
 				lNewValue = aModel.getPheremone(fLocationMapping[i], i) +   (aMultiplier * 10000)/fTotalDistance;
+				
+				System.out.println(lNewValue + "|" + fTotalDistance + "|" + (aMultiplier * 10000)/fTotalDistance);
+
 				aModel.updatePheremonePath(fLocationMapping[i], i, lNewValue);
 			}
 		}

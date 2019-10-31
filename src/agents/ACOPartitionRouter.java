@@ -139,7 +139,7 @@ public class ACOPartitionRouter extends ACORouter
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions(ant_routes);
-			UpdateTrails();
+			UpdateTrails(t);
 		}
 
 		for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
@@ -196,8 +196,7 @@ public class ACOPartitionRouter extends ACORouter
 
 			}
 
-			fGraph = lAnts.updateModel(fGraph);
-
+			fGraph = lAnts.updateModel(fGraph, 2);
 			lAnts.reset((ArrayList<Integer>) input_routes[counter].clone());
 
 			counter++;
