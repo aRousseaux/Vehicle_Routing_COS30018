@@ -80,6 +80,16 @@ public abstract class GenericRouter extends Agent implements Router
 				}
 			}
 		}
+		
+		// print total route length
+		int lTotalRouteLength = 0;
+		
+		for (int i = 0; i < fSelectedAgents.size(); i++)
+		{
+			lTotalRouteLength += calculateRouteLength(lSolution[i], fDataModel);
+		}
+		
+		System.out.println( "Total route length: " + lTotalRouteLength );
 	}
 
 	public int calculateRouteLength(int[] aRoute, DataModel aDataModel) 
