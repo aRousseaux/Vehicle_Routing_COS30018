@@ -44,15 +44,15 @@ public class Ant_VRP extends Ant {
 
 				if (values >= random_crossover_value)
 				{
-					total_distance_travelled += fDataModel.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
-					location_mapping[current_location_id] = avalible_locations.get(i);
+					fTotalDistance += fDataModel.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
+					fLocationMapping[current_location_id] = avalible_locations.get(i);
 
 					fCurrentLocation = fDataModel.getLocation(avalible_locations.get(i));
 
 					final int selected_index = i;
 
 					avalible_locations.removeIf(n -> (n == avalible_locations.get(selected_index).intValue()));
-					if (fDataModel.numLocations() - intial_locations_size ==  avalible_locations.size())
+					if (fDataModel.numLocations() - fInitialLocationSize ==  avalible_locations.size())
 					{
 						avalible_locations.removeAll(avalible_locations);
 					}
@@ -62,8 +62,8 @@ public class Ant_VRP extends Ant {
 
 					//this might be the problem!!!!!
 					if (avalible_locations.size() <= 1) {
-						for (int j = 0; j < location_mapping.length; j++) {
-							if (location_mapping[j] == 0) {
+						for (int j = 0; j < fLocationMapping.length; j++) {
+							if (fLocationMapping[j] == 0) {
 								//total_distance_travelled += fDataModel.getDistanceMatrix()[j][0];
 							}
 						}
