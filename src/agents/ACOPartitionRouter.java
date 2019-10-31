@@ -59,13 +59,11 @@ public class ACOPartitionRouter extends ACORouter
 		 */
 
 		KMeans kMeans = new KMeans(aDataModel);
-		kMeans.init();
-
 		List<Cluster> clusters = kMeans.getClusters();
 
-		ArrayList<Location>[] cluster_locations = (ArrayList<Location>[]) new ArrayList[aDataModel.numVehicles()];
+		ArrayList<Location>[] cluster_locations = (ArrayList<Location>[]) new ArrayList[clusters.size()];
 
-		for (int i = 0; i < aDataModel.numVehicles(); i++)
+		for (int i = 0; i < clusters.size(); i++)
 		{
 			cluster_locations[i] = (ArrayList<Location>) clusters.get(i).getPoints();
 		}
