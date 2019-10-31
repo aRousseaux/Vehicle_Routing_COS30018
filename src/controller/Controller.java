@@ -17,17 +17,18 @@ public class Controller implements Runnable
 	private ContainerController fContainerCtrl;
 	private AgentController fDBAgentCtrl;
 	private AgentController fRouteAgentCtrl;
-	
+
 	public Controller( DataModel aDataModel, String aRoutingMethod )
 	{
 		// get a hold to the JADE runtime
-		Runtime rt = Runtime.instance();
-		
+		Runtime lRuntime = Runtime.instance();
+
 		// launch the main container listening on port 8888
-		Profile pMain = new ProfileImpl(null, 8888, null);
-		pMain.setParameter(Profile.GUI, "true");
-		fContainerCtrl = rt.createMainContainer(pMain);
-		
+		Profile lMainProfile = new ProfileImpl( null, 8888, null );
+		// no JADE gui
+		lMainProfile.setParameter( Profile.GUI, "false" );
+		fContainerCtrl = lRuntime.createMainContainer( lMainProfile );
+
 		// create database agent
 		try 
 		{
@@ -37,62 +38,62 @@ public class Controller implements Runnable
 				DatabaseAgent.class.getName(), 
 				new Object[]{ aDataModel }
 			);
-			
+
 			fDBAgentCtrl.start();
 		} 
 		catch ( StaleProxyException e ) { e.printStackTrace(); }
-		
+
 		// create drivers
 		for ( int i = 0; i < aDataModel.numVehicles(); i++ )
 		{
 			//initialize agent
-			AgentController delivery;
+			AgentController lDeliveryController;
 			try 
 			{
-				delivery = fContainerCtrl.createNewAgent
+				lDeliveryController = fContainerCtrl.createNewAgent
 				(
 					"Delivery_Agent" + i,
 					DriverAgent.class.getName(),
-					new Object[]{aDataModel, i}
+					new Object[]{ aDataModel, i }
 				);
 
-				delivery.start();
+				lDeliveryController.start();
 			} 
 			catch (StaleProxyException e) {	e.printStackTrace(); }
 		}
-		
+
 		// create master
 		try
 		{
 			//based on form input, a specific MasterRouteAgent will be created
-			switch(aRoutingMethod)
+			switch( aRoutingMethod )
 			{
 			case "CHOCO":
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", CHOCORouter.class.getName(), new Object[]{ aDataModel } );
 				break;
 			case "CHOCO2":
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", CHOCORouter2.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", CHOCORouter2.class.getName(), new Object[]{ aDataModel } );
 				break;
 			case "OR-Tools":
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{ aDataModel } );
 				break;
 			case "ACO":
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACORouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", ACORouter.class.getName(), new Object[]{ aDataModel } );
 				break;
 			case "ACO-Partition":
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", ACOPartitionRouter.class.getName(), new Object[]{ aDataModel } );
 				break;
 			default:
-				fRouteAgentCtrl = fContainerCtrl.createNewAgent("MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{aDataModel});
+				fRouteAgentCtrl = fContainerCtrl.createNewAgent( "MasterRouteAgent", ORToolsRouter.class.getName(), new Object[]{ aDataModel } );
 				break;
 			}
 
 			fRouteAgentCtrl.start();
 		}
 		catch( StaleProxyException e ) { e.printStackTrace(); }
-		
+
 		// initialize thread
-		fThread = new Thread(this);
+		fThread = new Thread( this );
 		fThread.start();
 	}
 
@@ -101,14 +102,14 @@ public class Controller implements Runnable
 		try 
 		{
 			// wait for drivers to initialize
-			Thread.sleep(2000);
-			
+			Thread.sleep( 2000 );
+
 			// grab interface
-			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface(Router.class);
+			Router lMasterInterface = fRouteAgentCtrl.getO2AInterface( Router.class );
 
 			//records start time of solver
 			long lStart = System.currentTimeMillis();
-			
+
 			// solve and distribute routes
 			lMasterInterface.distributeRoutes();
 
@@ -116,11 +117,11 @@ public class Controller implements Runnable
 			long lFinish = System.currentTimeMillis();
 
 			//Displays total time required for solver to run, providing crucial data for further performance anaylsis
-			System.out.println("Time taken to route: " + (lFinish - lStart) + " milliseconds.");
+			System.out.println( "Time taken to route and distribute: " + (lFinish - lStart) + "ms" );
 		} 
 		catch ( InterruptedException | StaleProxyException e ) { e.printStackTrace(); }
 	}
-	
+
 	// delete thread, terminates controller
 	public void shutdown() throws StaleProxyException
 	{

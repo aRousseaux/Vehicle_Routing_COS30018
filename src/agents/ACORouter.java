@@ -56,7 +56,7 @@ public class ACORouter extends GenericRouter
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
 
-				total_distance += lAnts.total_distance_travelled;
+				total_distance += lAnts.fTotalDistance;
 			}
 		}
 
@@ -66,9 +66,9 @@ public class ACORouter extends GenericRouter
 			{
 				fGraph = jAnts.updateModel(fGraph);
 
-				if (jAnts.total_distance_travelled > 0)
+				if (jAnts.fTotalDistance > 0)
 				{
-					jAnts.total_distance_travelled = total_distance;
+					jAnts.fTotalDistance = total_distance;
 				}
 
 				jAnts.reset();
@@ -119,7 +119,7 @@ public class ACORouter extends GenericRouter
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
 
-				total_distance += lAnts.total_distance_travelled;
+				total_distance += lAnts.fTotalDistance;
 			}
 		}
 
@@ -130,9 +130,9 @@ public class ACORouter extends GenericRouter
 			{
 				fGraph = jAnts.updateModel(fGraph);
 
-				if (jAnts.total_distance_travelled > 0)
+				if (jAnts.fTotalDistance > 0)
 				{
-					jAnts.total_distance_travelled = total_distance;
+					jAnts.fTotalDistance = total_distance;
 				}
 
 				return_array[count] = jAnts.getPathArray();

@@ -1,3 +1,4 @@
+
 package agents;
 
 import data.DataModel;
@@ -9,111 +10,123 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Ant_VRP extends Ant {
-    public Ant_VRP(DataModel aGraph, int input_vehicle_id) {
-        super(aGraph, input_vehicle_id);
-    }
+public class Ant_VRP extends Ant
+{
+	public Ant_VRP(DataModel aGraph, int input_vehicle_id)
+	{
+		super(aGraph, input_vehicle_id);
+	}
 
-    public Ant_VRP(DataModel aGraph, List<Integer> input_locations, int input_vehicle_id)
-    {
-        super(aGraph, input_locations, input_vehicle_id);
-    }
+	public Ant_VRP(DataModel aGraph, List<Integer> aLocations, int input_vehicle_id)
+	{
+		super(aGraph, aLocations, input_vehicle_id);
+	}
 
-    public ArrayList<Integer> nextLocation(PheremoneModel model, ArrayList<Integer> avalible_locations)
-    {
-        Random random = new Random();
-        int max = Math.round((int) getRandomHigh(model, avalible_locations));
+	public ArrayList<Integer> nextLocation(PheremoneModel aModel, ArrayList<Integer> aAvalibleLocations)
+	{
+		Random lRand = new Random();
+		int lMax = Math.round((int) getRandomHigh(aModel, aAvalibleLocations));
 
-        double random_crossover_value;
+		double lRandomCrossoverValue;
 
-        if (max > 0) {
-            random_crossover_value = random.nextInt(max);
-        } else {
-            random_crossover_value = 0;
-        }
+		if (lMax > 0)
+		{
+			lRandomCrossoverValue = lRand.nextInt(lMax);
+		}
+		else
+		{
+			lRandomCrossoverValue = 0;
+		}
 
-        int current_location_id = fCurrentLocation.getfLocationID();
-        double values = 0;
+		int lCurrentLocationID = fCurrentLocation.getfLocationID();
+		double lValues = 0;
 
-        //minus one, due to account for home location
-        if ((intial_locations_size - avalible_locations.size()) <  fDataModel.getCapacities()[linked_vehicle_id] - 1)
-        {
-            return avalible_locations;
-        }
+		if (aAvalibleLocations.size() > 0)
+		{
+			for (int i = 0; i < aAvalibleLocations.size(); i++)
+			{
+				if (aModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)] > 0)
+				{
+					lValues += aModel.getPheremone(lCurrentLocationID, aAvalibleLocations.get(i)) * 10000 / aModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)];
+				}
 
-        if (avalible_locations.size() > 0) {
-            for (int i = 0; i < avalible_locations.size(); i++) {
-                if (model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)] > 0)
-                {
-                    values += model.getPheremone(current_location_id, avalible_locations.get(i)) * 10000 / model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
-                }
+				if (lValues >= lRandomCrossoverValue)
+				{
+					fTotalDistance += fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)];
+					fLocationMapping[lCurrentLocationID] = aAvalibleLocations.get(i);
 
-                if (values >= random_crossover_value)
-                {
-                    total_distance_travelled += fDataModel.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
-                    location_mapping[current_location_id] = avalible_locations.get(i);
+					fCurrentLocation = fDataModel.getLocation(aAvalibleLocations.get(i));
 
-                    fCurrentLocation = fDataModel.getLocation(avalible_locations.get(i));
+					final int lSelectedIndex = i;
 
-                    final int selected_index = i;
+					aAvalibleLocations.removeIf(n -> (n == aAvalibleLocations.get(lSelectedIndex).intValue()));
+					if (fDataModel.numLocations() - fInitialLocationSize ==  aAvalibleLocations.size())
+					{
+						aAvalibleLocations.removeAll(aAvalibleLocations);
+					}
 
-                    avalible_locations.removeIf(n -> (n == avalible_locations.get(selected_index).intValue()));
+					//probably can be condensed to this!
+					//avalible_locations.remove(i);
 
-                    //probably can be condensed to this!
-                    //avalible_locations.remove(i);
+					//this might be the problem!!!!!
+					if (aAvalibleLocations.size() <= 1)
+					{
+						for (int j = 0; j < fLocationMapping.length; j++)
+						{
+							if (fLocationMapping[j] == 0)
+							{
+								//total_distance_travelled += fDataModel.getDistanceMatrix()[j][0];
+							}
+						}
+					}
 
-                    //this might be the problem!!!!!
-                    if (avalible_locations.size() <= 1) {
-                        for (int j = 0; j < location_mapping.length; j++) {
-                            if (location_mapping[j] == 0) {
-                                //total_distance_travelled += fDataModel.getDistanceMatrix()[j][0];
-                            }
-                        }
-                    }
+					return aAvalibleLocations;
+				}
+			}
+		}
+		else
+		{
+			return aAvalibleLocations;
+		}
 
-                    return (ArrayList<Integer>) avalible_locations.clone();
-                }
-            }
-        }
-        else
-        {
-            return avalible_locations;
-        }
+		return aAvalibleLocations;
+	}
 
-        return avalible_locations;
-    }
+	public double getRandomHigh(PheremoneModel aModel, ArrayList<Integer> aAvalibleLocations)
+	{
+		double lMaxValue = 0;
+		int lCurrentLocationID = fCurrentLocation.getfLocationID();
 
-    public double getRandomHigh(PheremoneModel model, ArrayList<Integer> avalible_locations) {
-        double max_value = 0;
-        int current_location_id = fCurrentLocation.getfLocationID();
+		for (int i = 0; i < aAvalibleLocations.size(); i++)
+		{
+			if (aModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)] > 0)
+			{
+				lMaxValue += aModel.getPheremone(lCurrentLocationID, aAvalibleLocations.get(i)) * 10000 / aModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)];
+			}
+		}
 
-        for (int i = 0; i < avalible_locations.size(); i++) {
-            if (model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)] > 0) {
-                max_value += model.getPheremone(current_location_id, avalible_locations.get(i)) * 10000 / model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)];
-            }
-        }
+		return lMaxValue;
+	}
 
-        return max_value;
-    }
+	public int getClosestLocation(Location aCurrentLocation, ArrayList<Integer> aAvaliableLocations)
+	{
+		int lClosestDistance = 0;
+		int lClosestIndex = 0;
 
-    public int getClosestLocation(Location current_location, ArrayList<Integer> avaliable_locations)
-    {
-        int closest_distance = 0;
-        int closest_index = 0;
-        for (int i = 0; i < avaliable_locations.size(); i++)
-        {
-            if (closest_distance == 0)
-            {
-                closest_distance = fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)];
-            }
+		for (int i = 0; i < aAvaliableLocations.size(); i++)
+		{
+			if (lClosestDistance == 0)
+			{
+				lClosestDistance = fDataModel.getDistanceMatrix()[aCurrentLocation.getfLocationID()][aAvaliableLocations.get(i)];
+			}
 
-            if (closest_distance > fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)])
-            {
-                closest_distance = fDataModel.getDistanceMatrix()[current_location.getfLocationID()][avaliable_locations.get(i)];
-                closest_index = i;
-            }
-        }
+			if (lClosestDistance > fDataModel.getDistanceMatrix()[aCurrentLocation.getfLocationID()][aAvaliableLocations.get(i)])
+			{
+				lClosestDistance = fDataModel.getDistanceMatrix()[aCurrentLocation.getfLocationID()][aAvaliableLocations.get(i)];
+				lClosestIndex = i;
+			}
+		}
 
-        return closest_index;
-    }
+		return lClosestIndex;
+	}
 }

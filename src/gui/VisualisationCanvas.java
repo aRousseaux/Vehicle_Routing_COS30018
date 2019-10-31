@@ -22,7 +22,7 @@ import data.*;
 public class VisualisationCanvas extends Canvas implements Runnable 
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Thread fThread;
 	private Connection fDBConnection; // connection to database
 	private List<Location> fLocations;
@@ -31,17 +31,17 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	private double fVehiclesChecksum;
 	private List<List<Integer>> fPaths; // list of paths referencing location id
 	private double fPathsChecksum;
-	
+
 	public VisualisationCanvas()
 	{
 		// set canvas size
 		setPreferredSize( new Dimension( 1000, 1000 ) );
-		
+
 		// initialize fields
 		fLocations = new ArrayList<Location>();
 		fVehicles = new ArrayList<Vehicle>();
 		fPaths = new ArrayList<List<Integer>>();
-		
+
 		// connect to Database
 		try
 		{
@@ -54,12 +54,12 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			);
 		}
 		catch ( Exception e ) { e.printStackTrace(); }
-		
+
 		// start thread
 		fThread = new Thread( this );
 		fThread.start();
 	}
-	
+
 	public void run() 
 	{
 		while( fThread != null )
@@ -68,10 +68,10 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			{
 				// update rate
 				Thread.sleep(2000);
-				
+
 				Statement lLocationStatement = fDBConnection.createStatement();
 				ResultSet lLocationResult;
-				
+
 				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE location_data;");
 				lLocationResult.next();
 				if (fLocationChecksum != lLocationResult.getDouble("Checksum"))
@@ -79,7 +79,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 					fLocationChecksum = lLocationResult.getDouble("Checksum");
 					updateLocations();
 				}
-				
+
 				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE agent_positions;");
 				lLocationResult.next();
 				if (fVehiclesChecksum != lLocationResult.getDouble("Checksum"))
@@ -87,50 +87,51 @@ public class VisualisationCanvas extends Canvas implements Runnable
 					fVehiclesChecksum = lLocationResult.getDouble("Checksum");
 					updateVehicles();
 				}
-				
+
 				lLocationResult = lLocationStatement.executeQuery("CHECKSUM TABLE agent_routes;");
 				lLocationResult.next();
 				if (fPathsChecksum != lLocationResult.getDouble("Checksum"))
 				{
 					fPathsChecksum = lLocationResult.getDouble("Checksum");
+					Thread.sleep(50); // allow concurrent updates to occur
 					updatePaths();
 				}
 			} 
 			catch (InterruptedException e) { e.printStackTrace(); } 
 			catch (SQLException e) { e.printStackTrace(); }
-			
+
 			repaint();
 		}
 	}
-	
+
 	public void paint( Graphics g )
 	{
 		// repaint canvas
 		update( g );
 	}
-	
+
 	// repaint the canvas
 	public void update( Graphics g ) 
 	{
 		// create image for double buffering
 		Image lBuffer = createImage( getWidth(), getHeight() );
 		Graphics gg = lBuffer.getGraphics();
-		
+
 		// clear background
 		gg.setColor( Color.WHITE );
 		gg.fillRect( 0, 0, getWidth(), getHeight() );
-		
+
 		// draw paths
 		for (int i = 0; i < fPaths.size(); i++) 
 		{
 			Random lRand = new Random(i);
-			
+
 			float red = lRand.nextFloat();
 			float green = lRand.nextFloat();
 			float blue = lRand.nextFloat();
-			
+
 			gg.setColor(new Color(red, green, blue));
-			
+
 			for (int j = 0; j < fPaths.get(i).size() - 1; j++) 
 			{
 				gg.drawLine
@@ -142,37 +143,37 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				);
 			}
 		}
-		
+
 		// draw locations
 		gg.setColor( Color.BLACK );
 		fLocations.forEach( (lLocation) -> gg.fillRect( lLocation.x, lLocation.y, 10, 10 ) );
-		
+
 		// draw depot
 		gg.setColor( Color.RED );
 		if (fLocations.size() != 0)
 		{
 			gg.fillRect( fLocations.get(0).x, fLocations.get(0).y, 10, 10 );
 		}
-		
+
 		// draw driver locations
 		for (int i = 0; i < fVehicles.size(); i++)
 		{
 			Random lRand = new Random(i);
-			
+
 			float red = lRand.nextFloat();
 			float green = lRand.nextFloat();
 			float blue = lRand.nextFloat();
-			
+
 			gg.setColor( new Color(red, green, blue) );
-			
+
 			gg.fillOval(fVehicles.get(i).x, fVehicles.get(i).y, 10, 10);
 		}
-		
+
 		// draw final image to the screen
 		g.drawImage( lBuffer, 0, 0, null );
 		gg.dispose();
 	}
-	
+
 	public void updateLocations()
 	{
 		// update locations
@@ -190,7 +191,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 	}
-	
+
 	public void updateVehicles()
 	{
 		// update driver positions
@@ -219,7 +220,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 	}
-	
+
 	public void updatePaths()
 	{
 		// update paths
@@ -231,13 +232,13 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			{
 				Statement lRouteStatement = fDBConnection.createStatement();
 				ResultSet lRouteResult = lRouteStatement.executeQuery("SELECT * FROM agent_routes WHERE Agent_ID = "+i+" ORDER BY Agent_ID ASC, Route_Position ASC");
-				
+
 				List<Integer> lPath = new ArrayList<Integer>();
 				while (lRouteResult.next())
 				{
 					lPath.add(lRouteResult.getInt("Location_ID"));
 				}
-				
+
 				fPaths.add(lPath);
 			}
 		}

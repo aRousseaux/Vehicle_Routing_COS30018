@@ -18,25 +18,25 @@ public class CHOCORouter extends GenericRouter
 	public CHOCORouter()
 	{
 		registerO2AInterface(Router.class, this);
-		
+
 		fSelectedAgents = new ArrayList<AMSAgentDescription>();
 	}
-	
+
 	protected void setup()
 	{
 		fDataModel = (DataModel) getArguments()[0];
 	}
 
-	//solves teh best routes for drivers, within the constraint of already assigned packages
+	//solves the best routes for drivers, within the constraint of already assigned packages
 	public int[][] solveRoute( DataModel aDataModel, int aMaxRouteDistance ) 
 	{
 		// Model
 		Model lModel = new Model("Vehicle Routing Problem");
 
-		IntVar[][] vehicle_locations = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
-		IntVar[][] vehicle_routes = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
-		IntVar[][] route_lengths = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, 9999);
-		IntVar total_length = lModel.intVar(0, 9999);
+		IntVar[][] lVehicleLocations = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
+		IntVar[][] lVehicleRoutes = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, (aDataModel.numLocations() - 1));
+		IntVar[][] lRouteLengths = lModel.intVarMatrix(aDataModel.numVehicles(), aDataModel.numLocations(), 0, 9999);
+		IntVar lTotalLength = lModel.intVar(0, 9999);
 
 		IntVar[][] lVehiclePackages = lModel.intVarMatrix(aDataModel.numLocations(), aDataModel.numVehicles(), 0, 1);
 
@@ -57,59 +57,59 @@ public class CHOCORouter extends GenericRouter
 			lModel.sum((IntVar[]) getColumn(lVehiclePackages, i), "<=", aDataModel.getVehicle(i).getCapacity()).post();
 		}
 
-		for (int i = 0; i < vehicle_locations.length; i++)
+		for (int i = 0; i < lVehicleLocations.length; i++)
 		{
-			lModel.ifThen(lModel.sum(vehicle_routes[i], ">", 0), lModel.arithm(vehicle_routes[i][0], ">", 0));
+			lModel.ifThen(lModel.sum(lVehicleRoutes[i], ">", 0), lModel.arithm(lVehicleRoutes[i][0], ">", 0));
 
-			for (int j = 0; j < vehicle_locations[i].length; j++)
+			for (int j = 0; j < lVehicleLocations[i].length; j++)
 			{
 				lModel.ifThenElse(lModel.arithm(lVehiclePackages[j][i], ">", 0),
-						lModel.arithm(vehicle_locations[i][j], "=", j),
-						lModel.arithm(vehicle_locations[i][j], "=", 0));
+						lModel.arithm(lVehicleLocations[i][j], "=", j),
+						lModel.arithm(lVehicleLocations[i][j], "=", 0));
 
-				lModel.ifThen(lModel.arithm(vehicle_locations[i][j], ">", 0), lModel.count(vehicle_locations[i][j], vehicle_routes[i], lModel.intVar(1)));
-				lModel.arithm(vehicle_routes[i][j], "!=", j).post();
+				lModel.ifThen(lModel.arithm(lVehicleLocations[i][j], ">", 0), lModel.count(lVehicleLocations[i][j], lVehicleRoutes[i], lModel.intVar(1)));
+				lModel.arithm(lVehicleRoutes[i][j], "!=", j).post();
 
 				if (j > 0)
 				{
-					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][j],"!=", 0), lModel.atLeastNValues(vehicle_locations[i], lModel.intVar(1), true)),
-							lModel.or(lModel.element(vehicle_routes[i][j], vehicle_routes[i], lModel.intVar(j), 0), lModel.element(vehicle_routes[i][j - 1], vehicle_routes[i], lModel.intVar(j), 0)));
+					lModel.ifThen(lModel.and(lModel.arithm(lVehicleRoutes[i][j],"!=", 0), lModel.atLeastNValues(lVehicleLocations[i], lModel.intVar(1), true)),
+							lModel.or(lModel.element(lVehicleRoutes[i][j], lVehicleRoutes[i], lModel.intVar(j), 0), lModel.element(lVehicleRoutes[i][j - 1], lVehicleRoutes[i], lModel.intVar(j), 0)));
 
-					lModel.ifThen(lModel.count(j, vehicle_routes[i], lModel.intVar(0)), lModel.arithm(vehicle_routes[i][j], "=", 0));
+					lModel.ifThen(lModel.count(j, lVehicleRoutes[i], lModel.intVar(0)), lModel.arithm(lVehicleRoutes[i][j], "=", 0));
 
 					if (aDataModel.numVehicles() == 1)
 					{
-						lModel.circuit(vehicle_routes[i]).post();
+						lModel.circuit(lVehicleRoutes[i]).post();
 					}
 				}
 
 				for (int k = 1; k < aDataModel.numLocations(); k++)
 				{
-					lModel.ifThen(lModel.element(lModel.intVar(j), vehicle_routes[i], lModel.intVar(k), 0),
-							lModel.arithm(route_lengths[i][k], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
+					lModel.ifThen(lModel.element(lModel.intVar(j), lVehicleRoutes[i], lModel.intVar(k), 0),
+							lModel.arithm(lRouteLengths[i][k], "=", getBinPack(lVehicleRoutes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
 
-					lModel.not(lModel.and(lModel.element(vehicle_routes[i][j], vehicle_locations[i], lModel.intVar(k), 0),
-							lModel.arithm(vehicle_routes[i][k], "=", j))).post();
+					lModel.not(lModel.and(lModel.element(lVehicleRoutes[i][j], lVehicleLocations[i], lModel.intVar(k), 0),
+							lModel.arithm(lVehicleRoutes[i][k], "=", j))).post();
 
-					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][k], "!=", 0), lModel.element(lModel.intVar(0), vehicle_routes[i], vehicle_routes[i][k], 0)),
-							lModel.arithm(route_lengths[i][0], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[0], lModel, 0)));
+					lModel.ifThen(lModel.and(lModel.arithm(lVehicleRoutes[i][k], "!=", 0), lModel.element(lModel.intVar(0), lVehicleRoutes[i], lVehicleRoutes[i][k], 0)),
+							lModel.arithm(lRouteLengths[i][0], "=", getBinPack(lVehicleRoutes[i], aDataModel.getDistanceMatrix()[0], lModel, 0)));
 				}
 			}
 
-			lModel.sum(MatrixToArray(route_lengths), "=", total_length).post();
-			lModel.setObjective(Model.MINIMIZE, total_length);
+			lModel.sum(MatrixToArray(lRouteLengths), "=", lTotalLength).post();
+			lModel.setObjective(Model.MINIMIZE, lTotalLength);
 
-			lModel.allDifferentExcept0(vehicle_routes[i]).post();
-			lModel.allDifferentExcept0(vehicle_locations[i]).post();
+			lModel.allDifferentExcept0(lVehicleRoutes[i]).post();
+			lModel.allDifferentExcept0(lVehicleLocations[i]).post();
 		}
 
-		lModel.allDifferentExcept0(MatrixToArray(vehicle_routes)).post();
+		lModel.allDifferentExcept0(MatrixToArray(lVehicleRoutes)).post();
 
 
 		Solver lSolver = lModel.getSolver();
 		if (lSolver.solve())
 		{
-			Solution s = lSolver.findSolution();
+			Solution lSolution = lSolver.findSolution();
 		}
 		else
 		{
@@ -117,80 +117,81 @@ public class CHOCORouter extends GenericRouter
 			// no solution
 		}
 
-		int[][] return_routes = new int[aDataModel.numVehicles()][];
+		int[][] lReturnRoutes = new int[aDataModel.numVehicles()][];
 		System.out.println("Num vehicle: " + aDataModel.numVehicles());
 
 		for (int i = 0; i < aDataModel.numVehicles(); i++)
 		{
 
-			String route_string = "";
+			String lRouteString = "";
 
-			route_string += "0, ";
-			route_string += vehicle_routes[i][0].getValue() + ", ";
-			int previous = vehicle_routes[i][0].getValue();
-			for (int j = 0; j <= vehicle_routes[i].length; j++)
+			lRouteString += "0, ";
+			lRouteString += lVehicleRoutes[i][0].getValue() + ", ";
+			int lPrevious = lVehicleRoutes[i][0].getValue();
+			
+			for (int j = 0; j <= lVehicleRoutes[i].length; j++)
 			{
-				if (vehicle_routes[i][previous].getValue() > 0)
+				if (lVehicleRoutes[i][lPrevious].getValue() > 0)
 				{
-					route_string += vehicle_routes[i][previous].getValue() + ", ";
+					lRouteString += lVehicleRoutes[i][lPrevious].getValue() + ", ";
 				}
 
-				previous = vehicle_routes[i][previous].getValue();
+				lPrevious = lVehicleRoutes[i][lPrevious].getValue();
 
-				if (previous == 0)
+				if (lPrevious == 0)
 				{
 					break;
 				}
 			}
 
-			route_string += "0,";
-			return_routes[i] = new int[route_string.split(",").length];
-			for (int k = 0; k < return_routes[i].length; k++)
+			lRouteString += "0,";
+			lReturnRoutes[i] = new int[lRouteString.split(",").length];
+			for (int k = 0; k < lReturnRoutes[i].length; k++)
 			{
-				return_routes[i][k] = Integer.valueOf(route_string.split(",")[k].trim());
+				lReturnRoutes[i][k] = Integer.valueOf(lRouteString.split(",")[k].trim());
 			}
 
-			System.out.println("Route OUT: " + route_string);
+			System.out.println("Route OUT: " + lRouteString);
 		}
 
-		return return_routes;
+		return lReturnRoutes;
 	}
 
 	//creates an array of intvars that has the package value, for a specific package, for all the solution vehicles
-	public static IntVar[] getColumn(IntVar[][] aMatrix, int index)
+	public static IntVar[] getColumn(IntVar[][] aMatrix, int aIndex)
 	{
-		IntVar[] return_array = new IntVar[aMatrix.length];
+		IntVar[] lReturnArray = new IntVar[aMatrix.length];
 
 		for (int i = 0; i <aMatrix.length; i++)
 		{
-			return_array[i] = aMatrix[i][index];
+			lReturnArray[i] = aMatrix[i][aIndex];
 		}
 
-		return return_array;
+		return lReturnArray;
 	}
 
 	//converts the input matrix into an array, but just creating a big array, with the individual matrix within the array, one after the other
-	public static IntVar[] MatrixToArray(IntVar[][] matrix)
+	public static IntVar[] MatrixToArray(IntVar[][] aMatrix)
 	{
-		IntVar[] return_array = new IntVar[(matrix.length * matrix[0].length)];
+		IntVar[] lReturnArray = new IntVar[(aMatrix.length * aMatrix[0].length)];
 
-		for (int i = 0; i < matrix.length; i++)
+		for (int i = 0; i < aMatrix.length; i++)
 		{
-			for (int j = 0; j < matrix[i].length; j++)
+			for (int j = 0; j < aMatrix[i].length; j++)
 			{
-				return_array[i * (matrix[i].length) + j] = matrix[i][j];
+				lReturnArray[i * (aMatrix[i].length) + j] = aMatrix[i][j];
 			}
 		}
-		return return_array;
+		return lReturnArray;
 	}
 
 
-	public static IntVar getBinPack(IntVar[] input_var, int[] matrix_location, Model model, int i)
+	public static IntVar getBinPack(IntVar[] aVar, int[] aMatrixLocation, Model aModel, int aIndex)
 	{
-		IntVar[] return_value = model.intVarArray(matrix_location.length, 0, 9999);
+		IntVar[] lReturnValue = aModel.intVarArray(aMatrixLocation.length, 0, 9999);
 
-		model.binPacking(input_var, matrix_location, return_value, 0).post();
+		aModel.binPacking(aVar, aMatrixLocation, lReturnValue, 0).post();
 
-		return return_value[i];
+		return lReturnValue[aIndex];
 	}
 }

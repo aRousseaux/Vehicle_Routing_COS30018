@@ -16,7 +16,7 @@ public class DatabaseAgent extends Agent
 
 	private Connection fDBConnection;
 	private DataModel fDataModel;
-	
+
 	private void createTables()
 	{
 		try
@@ -38,12 +38,12 @@ public class DatabaseAgent extends Agent
 		}
 		catch(Exception e) { e.printStackTrace(); }
 	}
-	
+
 	protected void setup()
 	{
 		Object[] lArguments = getArguments();
 		fDataModel = (DataModel) lArguments[0];
-		
+
 		// Connect to Database
 		try
 		{
@@ -56,10 +56,10 @@ public class DatabaseAgent extends Agent
 			);
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		
+
 		// generate database
 		createTables();
-		
+
 		try
 		{
 			//with provided DataModel, all of the generated locations are added to the database
@@ -70,7 +70,7 @@ public class DatabaseAgent extends Agent
 			}
 		}
 		catch ( SQLException e ) { e.printStackTrace(); }
-		
+
 		// add message receiving behavior
 		addBehaviour(new CyclicBehaviour(this)
 		{
@@ -94,11 +94,11 @@ public class DatabaseAgent extends Agent
 
 						addVehiclePosition
 						(
-							Integer.valueOf(lMessage.getSender().getLocalName().replace("Delivery_Agent","")),
-							lPosX,
-							lPosY,
-							lDateFormatter.format(lNow)
-						);
+								Integer.valueOf(lMessage.getSender().getLocalName().replace("Delivery_Agent","")),
+								lPosX,
+								lPosY,
+								lDateFormatter.format(lNow)
+								);
 					}
 
 					if (lMessage.getContent().contains("agent_details"))
@@ -126,7 +126,7 @@ public class DatabaseAgent extends Agent
 			}
 		});
 	}
-	
+
 	private void addVehiclePosition(int aVehicleNum, long aPosX, long aPosY, String aTime)
 	{
 		try
@@ -134,12 +134,12 @@ public class DatabaseAgent extends Agent
 			Statement lStatement = fDBConnection.createStatement();
 			lStatement.executeUpdate
 			(
-				"INSERT INTO Agent_Positions VALUES (" 
-				+ aVehicleNum + "," 
-				+ aPosX + "," 
-				+ aPosY + ",'" 
-				+ aTime + "')"
-			);
+					"INSERT INTO Agent_Positions VALUES (" 
+							+ aVehicleNum + "," 
+							+ aPosX + "," 
+							+ aPosY + ",'" 
+							+ aTime + "')"
+					);
 		}
 		catch (SQLException e) { e.printStackTrace(); }
 	}
@@ -150,7 +150,7 @@ public class DatabaseAgent extends Agent
 		{
 			Statement lStatement = fDBConnection.createStatement();
 			lStatement.executeUpdate
-					(
+			(
 					"INSERT INTO agent_data VALUES ("
 							+ aVehicleNum + "," + aVehicleCapacity + ");"
 					);
@@ -167,7 +167,7 @@ public class DatabaseAgent extends Agent
 		} 
 		catch (SQLException e) { e.printStackTrace(); }
 	}
-	
+
 	protected void takeDown()
 	{
 		try 

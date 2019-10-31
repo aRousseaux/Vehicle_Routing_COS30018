@@ -18,20 +18,20 @@ import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 public class ORToolsRouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	static
 	{
 		System.loadLibrary("jniortools");
 	}
-	
+
 	//registers interface for the class
 	public ORToolsRouter()
 	{
 		registerO2AInterface(Router.class, this);
-		
+
 		fSelectedAgents = new ArrayList<AMSAgentDescription>();
 	}
-	
+
 	protected void setup()
 	{
 		fDataModel = (DataModel) getArguments()[0];
@@ -41,7 +41,7 @@ public class ORToolsRouter extends GenericRouter
 	{
 		// update data model
 		fDataModel = aDataModel;
-		
+
 		// Create Routing Index Manager
 		RoutingIndexManager manager =
 				new RoutingIndexManager(aDataModel.getDistanceMatrix().length, aDataModel.numVehicles(), 0); // depot always 0
@@ -57,27 +57,27 @@ public class ORToolsRouter extends GenericRouter
 					int toNode = manager.indexToNode(toIndex);
 					return aDataModel.getDistanceMatrix()[fromNode][toNode];
 				});
-		
+
 		//https://developers.google.com/optimization/routing/cvrp
 		final int demandCallbackIndex = routing.registerUnaryTransitCallback((long fromIndex) -> {
 			// Convert from routing variable Index to user NodeIndex.
 			int fromNode = manager.indexToNode(fromIndex);
 			return aDataModel.getLocation(fromNode).getCapacity();
 		});
-		
+
 		// Define cost of each arc.
 		routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
 		//add constraints
 		routing.addDimensionWithVehicleCapacity(demandCallbackIndex, 0, Arrays.stream(aDataModel.getCapacities()).mapToLong(i -> i).toArray(), true, "Capactiy_Constraint");
-		
+
 		// Add Distance constraint.
 		routing.addDimension(transitCallbackIndex, 0, aMaxRouteDistance,
 				true, // start cumul to zero
 				"Distance");
 		RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
 		distanceDimension.setGlobalSpanCostCoefficient(100);
-		
+
 		// Setting first solution heuristic.
 		RoutingSearchParameters searchParameters =
 				main.defaultRoutingSearchParameters()
@@ -89,7 +89,7 @@ public class ORToolsRouter extends GenericRouter
 
 		// Print solution on console.
 		//printSolution(aDataModel, routing, manager, solution);
-		
+
 		// Get array of arrays
 		int[][] return_multi_dimensional_array = new int[aDataModel.numVehicles()][];
 
@@ -98,10 +98,10 @@ public class ORToolsRouter extends GenericRouter
 			int[] output = getRouteArray(j, aDataModel, manager, routing, solution);
 			return_multi_dimensional_array[j] = output;
 		}
-		
+
 		return return_multi_dimensional_array;
 	}
-	
+
 	static int[] getRouteArray(int input_index, data.DataModel data, RoutingIndexManager manager, RoutingModel routing, Assignment solution)
 	{
 		ArrayList<Integer> output_route_array = new ArrayList<Integer>();

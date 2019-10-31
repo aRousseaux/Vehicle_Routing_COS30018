@@ -1,9 +1,9 @@
 
 package data;
 
-		import java.util.ArrayList;
-		import java.util.List;
-		import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DataModel
 {
@@ -11,7 +11,7 @@ public class DataModel
 	private List< Vehicle > fVehicles; // delivery drivers
 	private List< Location > fLocations; // each location
 	private int fSeed;
-	private Boolean fPackagesByWeight;
+	private boolean fPackagesByWeight;
 
 	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity )
 	{
@@ -51,15 +51,27 @@ public class DataModel
 		fPackagesByWeight = false;
 	}
 
-	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight)
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight,  boolean aNormalDist)
 	{
 		fVehicles = new ArrayList< Vehicle >();
 		fSeed = aSeed;
 
 		// generate the vehicle representation
-		for ( int i = 0; i < aVehicleNumber; i ++ )
+		if ( aNormalDist )
 		{
-			fVehicles.add( new Vehicle( i, aCapacity, 8 ) );
+			Random lRand = new Random( aSeed );
+			for ( int i = 0; i < aVehicleNumber; i ++ )
+			{
+				fVehicles.add( new Vehicle( i, (int) ( aCapacity * ( Math.abs(lRand.nextGaussian()) ) ), 8 ) );
+				System.out.println("Vehicle capacity: "+fVehicles.get(i).getCapacity());
+			}
+		}
+		else
+		{
+			for ( int i = 0; i < aVehicleNumber; i ++ )
+			{
+				fVehicles.add( new Vehicle( i, aCapacity, 8 ) );
+			}
 		}
 
 		generateLocations( aNumLocations, aSeed );
@@ -70,7 +82,8 @@ public class DataModel
 		fPackagesByWeight = aPackagesByWeight;
 	}
 
-	public Boolean getfPackagesByWeight() {
+	public Boolean getfPackagesByWeight()
+	{
 		return fPackagesByWeight;
 	}
 
