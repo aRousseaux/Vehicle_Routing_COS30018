@@ -196,7 +196,7 @@ public class ACOPartitionRouter extends ACORouter
 
 			}
 
-			fGraph = lAnts.updateModel(fGraph, 2);
+			fGraph = lAnts.updateModel(fGraph, 4);
 			lAnts.reset((ArrayList<Integer>) input_routes[counter].clone());
 
 			counter++;

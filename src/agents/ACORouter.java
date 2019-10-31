@@ -13,7 +13,7 @@ import java.util.List;
 public class ACORouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
-	public final int fIterations = 100;
+	public final int fIterations = 500;
 	public static int fNumAnts;
 	protected ArrayList<Integer> avalible_locations;
 	public List<Ant_VRP> fVRPAnts;
@@ -64,7 +64,7 @@ public class ACORouter extends GenericRouter
 		{
 			for (Ant_VRP jAnts : fVRPAnts)
 			{
-				fGraph = jAnts.updateModel(fGraph);
+				fGraph = jAnts.updateModel(fGraph, 2);
 
 				if (jAnts.fTotalDistance > 0)
 				{
@@ -127,7 +127,7 @@ public class ACORouter extends GenericRouter
 		{
 			for (Ant jAnts : return_ants)
 			{
-				fGraph = jAnts.updateModel(fGraph);
+				fGraph = jAnts.updateModel(fGraph, 2);
 
 				if (jAnts.fTotalDistance > 0)
 				{
@@ -152,8 +152,10 @@ public class ACORouter extends GenericRouter
 
 	//prune the pheremone model
 	//if a value is too small is comparison to the largest value in the model, then these pheremone values are set to 0
-	public void UpdateTrails(int current_iteration)
+	public void UpdateTrails(Integer current_iteration)
 	{
+		float ratio = Float.valueOf((float) current_iteration)/((float) fIterations);
+
 		for (int i = 0; i < fGraph.numLocations(); i++)
 		{
 			float max_value = 0;
@@ -168,7 +170,7 @@ public class ACORouter extends GenericRouter
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getPheremone(i,j) < max_value * (current_iteration/fIterations))
+				if (fGraph.getPheremone(i,j) * 2 < max_value * ratio)
 				{
 					fGraph.updatePheremonePath(i,j, 0);
 				}
@@ -195,7 +197,7 @@ public class ACORouter extends GenericRouter
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions();
-			UpdateTrails(t);
+			UpdateTrails(Integer.valueOf(t));
 		}
 
         for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)

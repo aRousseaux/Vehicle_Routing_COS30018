@@ -186,12 +186,8 @@ public class Ant
 				//multiplier is utilized if a ACO elitist algorithm is used
 				float lNewValue = aModel.getPheremone(i, fLocationMapping[i]) +  (aMultiplier * 10000)/fTotalDistance;
 
-				System.out.println(lNewValue + "|" + fTotalDistance + "|" + (aMultiplier * 10000)/fTotalDistance);
-
 				aModel.updatePheremonePath(i, fLocationMapping[i], lNewValue);
 				lNewValue = aModel.getPheremone(fLocationMapping[i], i) +   (aMultiplier * 10000)/fTotalDistance;
-				
-				System.out.println(lNewValue + "|" + fTotalDistance + "|" + (aMultiplier * 10000)/fTotalDistance);
 
 				aModel.updatePheremonePath(fLocationMapping[i], i, lNewValue);
 			}
