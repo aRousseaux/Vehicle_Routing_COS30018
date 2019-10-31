@@ -33,7 +33,7 @@ public class ACOPartitionRouter extends ACORouter
 			System.out.println("NULL");
 		}
 
-		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed());
+		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities());
 		fDataModel = fGraph;
 
 		fVRPAnts = new ArrayList<Ant_VRP>();
@@ -115,7 +115,7 @@ public class ACOPartitionRouter extends ACORouter
 		//the partitions are assigned to the ants present, looping through all the partitions, before resetting back to the first partition
 		for (int i = 0; i < fNumAnts; i++)
 		{
-			fVRPAnts.add( new Ant_VRP( fDataModel, (ArrayList<Integer>) ant_routes[counter].clone()) );
+			fVRPAnts.add( new Ant_VRP(fDataModel, (ArrayList<Integer>) ant_routes[counter].clone(), i));
 			counter++;
 			if (counter >= ant_routes.length)
 			{

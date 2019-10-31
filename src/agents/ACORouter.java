@@ -43,14 +43,15 @@ public class ACORouter extends GenericRouter
 		}
 
 		Collections.shuffle(avalible_locations);
-		while (avalible_locations.size() > fDataModel.getTotalCapacity())
-		{
-			avalible_locations.remove(0);
-		}
 
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
+			if (fDataModel.getTotalCapacity() < fDataModel.numLocations() && fDataModel.getTotalCapacity() <= fDataModel.numLocations() - avalible_locations.size())
+			{
+				avalible_locations = new ArrayList<Integer>();
+			}
+
 			for (Ant_VRP lAnts : fVRPAnts)
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
@@ -87,6 +88,8 @@ public class ACORouter extends GenericRouter
 	//output int[][] is then sent through to all delivery agents
 	public int[][] getSolutions()
 	{
+		System.out.println("get solution");
+
 		avalible_locations = new ArrayList<Integer>();
 		int[][] return_array = new int[fDataModel.numVehicles()][];
 
@@ -100,12 +103,18 @@ public class ACORouter extends GenericRouter
 		ArrayList<Ant_VRP> return_ants = new ArrayList<Ant_VRP>();
 		for (int i = 0; i < fDataModel.numVehicles(); i++)
 		{
-			return_ants.add(new Ant_VRP(fDataModel));
+			return_ants.add(new Ant_VRP(fDataModel, i));
 		}
 
 		int total_distance = 0;
 		while (avalible_locations.size() > 0)
 		{
+			System.out.println("Total: " + fDataModel.getTotalCapacity() + "|" + fDataModel.numLocations() + "|" + avalible_locations.size());
+			if (fDataModel.getTotalCapacity() < fDataModel.numLocations() && fDataModel.getTotalCapacity() <= fDataModel.numLocations() - avalible_locations.size())
+			{
+				avalible_locations = new ArrayList<Integer>();
+			}
+
 			for (Ant_VRP lAnts : return_ants)
 			{
 				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
@@ -126,8 +135,6 @@ public class ACORouter extends GenericRouter
 					jAnts.total_distance_travelled = total_distance;
 				}
 
-				System.out.println(Arrays.toString(jAnts.getPathArray()));
-				System.out.println(count);
 				return_array[count] = jAnts.getPathArray();
 				count++;
 			}
@@ -173,15 +180,15 @@ public class ACORouter extends GenericRouter
 
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
 	{
-		// initialize
-		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed());
+		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities());
+
 		fDataModel = fGraph;
 		fVRPAnts = new ArrayList<Ant_VRP>();
 		fNumAnts = fGraph.numVehicles();
 
 		for (int i = 0; i < fNumAnts; i++)
 		{
-			fVRPAnts.add( new Ant_VRP( fDataModel ) );
+			fVRPAnts.add(new Ant_VRP(fDataModel, i));
 		}
 
 		avalible_locations = new ArrayList<Integer>();

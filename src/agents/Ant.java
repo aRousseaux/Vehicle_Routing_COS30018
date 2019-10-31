@@ -21,6 +21,7 @@ public class Ant
     protected Location fCurrentLocation;
     protected DataModel fDataModel;
     protected int intial_locations_size;
+    protected int linked_vehicle_id;
 
     //keeps track of how far the ant has travelled for it's current journey
     protected int total_distance_travelled;
@@ -28,8 +29,9 @@ public class Ant
 
     //Ant objects are used within ACO solvers, finding the 'best' path based on the level of pheromones
     //leading to different locations
-    public Ant(DataModel aGraph)
+    public Ant(DataModel aGraph, int input_vehicle_id)
     {
+        linked_vehicle_id = input_vehicle_id;
         total_distance_travelled = 0;
         unvisited_locations = new ArrayList<Integer>();
         for (int i = 0; i < aGraph.numLocations(); i++)
@@ -45,8 +47,9 @@ public class Ant
         fCurrentLocation = fDataModel.getLocation(0);
     }
 
-    public Ant(DataModel aGraph, List<Integer> input_locations)
+    public Ant(DataModel aGraph, List<Integer> input_locations, int input_vehicle_id)
     {
+        linked_vehicle_id = input_vehicle_id;
         total_distance_travelled = 0;
         unvisited_locations = input_locations;
         intial_locations_size = unvisited_locations.size();
@@ -94,8 +97,9 @@ public class Ant
                     final int selected_index = i;
                     unvisited_locations.removeIf(n -> (n == unvisited_locations.get(selected_index)));
 
-                    if (fDataModel.numLocations() - intial_locations_size ==  unvisited_locations.size())
+                    if (intial_locations_size - unvisited_locations.size() <  fDataModel.getCapacities()[linked_vehicle_id % (fDataModel.numVehicles() - 1)])
                     {
+
                         unvisited_locations.removeAll(unvisited_locations);
                     }
 

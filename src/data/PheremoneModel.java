@@ -22,10 +22,10 @@ public class PheremoneModel extends DataModel
         }
     }
 
-    public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int Capacity)
+    public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] vehicle_capacity)
     {
         //FIX CAPACITY
-        super(aVehicleNumber, aNumLocations, aSeed, Capacity);
+        super(aVehicleNumber, aNumLocations, aSeed, vehicle_capacity);
 
         // pheremone level for each path between locations (i to j)
         fPaths = new float[numLocations()][numLocations()];

@@ -5,17 +5,18 @@ import data.Location;
 import data.PheremoneModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Ant_VRP extends Ant {
-    public Ant_VRP(DataModel aGraph) {
-        super(aGraph);
+    public Ant_VRP(DataModel aGraph, int input_vehicle_id) {
+        super(aGraph, input_vehicle_id);
     }
 
-    public Ant_VRP(DataModel aGraph, List<Integer> input_locations)
+    public Ant_VRP(DataModel aGraph, List<Integer> input_locations, int input_vehicle_id)
     {
-        super(aGraph, input_locations);
+        super(aGraph, input_locations, input_vehicle_id);
     }
 
     public ArrayList<Integer> nextLocation(PheremoneModel model, ArrayList<Integer> avalible_locations)
@@ -34,6 +35,12 @@ public class Ant_VRP extends Ant {
         int current_location_id = fCurrentLocation.getfLocationID();
         double values = 0;
 
+        //minus one, due to account for home location
+        if ((intial_locations_size - avalible_locations.size()) <  fDataModel.getCapacities()[linked_vehicle_id] - 1)
+        {
+            return avalible_locations;
+        }
+
         if (avalible_locations.size() > 0) {
             for (int i = 0; i < avalible_locations.size(); i++) {
                 if (model.getDistanceMatrix()[current_location_id][avalible_locations.get(i)] > 0)
@@ -51,10 +58,6 @@ public class Ant_VRP extends Ant {
                     final int selected_index = i;
 
                     avalible_locations.removeIf(n -> (n == avalible_locations.get(selected_index).intValue()));
-                    if (fDataModel.numLocations() - intial_locations_size ==  avalible_locations.size())
-                    {
-                        avalible_locations.removeAll(avalible_locations);
-                    }
 
                     //probably can be condensed to this!
                     //avalible_locations.remove(i);
@@ -71,7 +74,9 @@ public class Ant_VRP extends Ant {
                     return (ArrayList<Integer>) avalible_locations.clone();
                 }
             }
-        } else {
+        }
+        else
+        {
             return avalible_locations;
         }
 

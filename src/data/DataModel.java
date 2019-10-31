@@ -32,6 +32,25 @@ public class DataModel
 		fPackagesByWeight = false;
 	}
 
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] aCapacity )
+	{
+		fVehicles = new ArrayList< Vehicle >();
+		fSeed = aSeed;
+
+		// generate the vehicle representation
+		for ( int i = 0; i < aVehicleNumber; i ++ )
+		{
+			fVehicles.add( new Vehicle( i, aCapacity[i], 8 ) );
+		}
+
+		generateLocations( aNumLocations, aSeed );
+
+		// update distance matrix
+		calculateDistances();
+
+		fPackagesByWeight = false;
+	}
+
 	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight)
 	{
 		fVehicles = new ArrayList< Vehicle >();
