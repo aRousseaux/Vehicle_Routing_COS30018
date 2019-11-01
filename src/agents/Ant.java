@@ -298,6 +298,24 @@ public class Ant
 		return lReturnArray;
 	}
 
+	public int getRouteLength()
+	{
+		int route_length = 0;
+		int selected_location = 0;
+
+		for (int i = 0; i < fLocationMapping.length; i++)
+		{
+			route_length += fDataModel.getDistanceMatrix()[selected_location][fLocationMapping[selected_location]];
+			selected_location = fLocationMapping[selected_location];
+			if (selected_location == 0)
+			{
+				return route_length;
+			}
+		}
+
+		return route_length;
+	}
+
 	//returns the ant path in string form
 	//helpful for de-bugging
 	public String getPath()

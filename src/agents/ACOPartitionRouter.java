@@ -2,6 +2,7 @@
 package agents;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -166,6 +167,11 @@ public class ACOPartitionRouter extends ACORouter
 		for (int i = 0; i < return_array.length; i++)
 		{
 			return_array[i] = fVRPAnts.get(i).getPathArray();
+		}
+
+		for ( Ant lAnts : fVRPAnts )
+		{
+			System.out.println("Route: " + Arrays.toString(lAnts.fLocationMapping) + "| Distance: " + lAnts.getRouteLength());
 		}
 
 		return return_array;

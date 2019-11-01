@@ -209,6 +209,12 @@ public class ACORouter extends GenericRouter
             System.out.println();
         }
 
+		for ( Ant lAnts : fVRPAnts )
+		{
+			System.out.println("Route: " + Arrays.toString(lAnts.fLocationMapping) + "| Distance: " + lAnts.getRouteLength());
+		}
+
+
 		return getSolutions();
 	}
 }
