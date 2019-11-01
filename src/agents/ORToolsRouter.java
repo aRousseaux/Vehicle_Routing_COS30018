@@ -70,6 +70,7 @@ public class ORToolsRouter extends GenericRouter
 
 		//add constraints
 		routing.addDimensionWithVehicleCapacity(demandCallbackIndex, 0, Arrays.stream(aDataModel.getCapacities()).mapToLong(i -> i).toArray(), true, "Capactiy_Constraint");
+		System.out.println("Capacities " + Arrays.toString(aDataModel.getCapacities()));
 
 		// Add Distance constraint.
 		routing.addDimension(transitCallbackIndex, 0, aMaxRouteDistance,

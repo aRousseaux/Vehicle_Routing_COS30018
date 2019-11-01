@@ -74,8 +74,10 @@ public class CHOCORouter2 extends CHOCORouter
 
 					lModel.ifThen(lModel.arithm(vehicle_routes[i][j], "=", k),  lModel.arithm(vehicle_routes[i][k], "!=", j));
 
+					/*
 					lModel.ifThen(lModel.element(lModel.intVar(j), vehicle_routes[i], lModel.intVar(k), 0),
 							lModel.arithm(route_lengths[i][k], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[k], lModel, y)));
+					 */
 
 					lModel.ifThen(lModel.and(lModel.arithm(vehicle_routes[i][k], "!=", 0), lModel.element(lModel.intVar(0), vehicle_routes[i], vehicle_routes[i][k], 0)),
 							lModel.arithm(route_lengths[i][0], "=", getBinPack(vehicle_routes[i], aDataModel.getDistanceMatrix()[0], lModel, 0)));

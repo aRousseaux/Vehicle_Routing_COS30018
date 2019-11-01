@@ -54,7 +54,7 @@ public class CHOCORouter extends GenericRouter
 		}
 		else
 		{
-			lModel.sum(MatrixToArray(lVehiclePackages), "=", aDataModel.getTotalCapacity()).post();
+			lModel.sum(MatrixToArray(lVehiclePackages), "=", aDataModel.getTotalCapacity() - 2).post();
 		}
 
 		for (int i = 0; i < lVehicleLocations.length; i++)
@@ -85,8 +85,10 @@ public class CHOCORouter extends GenericRouter
 
 				for (int k = 1; k < aDataModel.numLocations(); k++)
 				{
+					/*
 					lModel.ifThen(lModel.element(lModel.intVar(j), lVehicleRoutes[i], lModel.intVar(k), 0),
 							lModel.arithm(lRouteLengths[i][k], "=", getBinPack(lVehicleRoutes[i], aDataModel.getDistanceMatrix()[k], lModel, k)));
+					 */
 
 					lModel.not(lModel.and(lModel.element(lVehicleRoutes[i][j], lVehicleLocations[i], lModel.intVar(k), 0),
 							lModel.arithm(lVehicleRoutes[i][k], "=", j))).post();

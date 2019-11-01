@@ -149,6 +149,7 @@ public class EditorForm extends JPanel
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 1;
 		this.add(fACOIterations, lConstraints);
+		fACOIterations.setText("100");
 
 		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
