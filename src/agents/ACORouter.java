@@ -13,7 +13,7 @@ import java.util.List;
 public class ACORouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
-	public final int fIterations = 500;
+	public final int fIterations = 100;
 	public static int fNumAnts;
 	protected ArrayList<Integer> avalible_locations;
 	public List<Ant_VRP> fVRPAnts;
@@ -180,7 +180,7 @@ public class ACORouter extends GenericRouter
 
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
 	{
-		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities());
+		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities(), fDataModel.getfIterations());
 
 		fDataModel = fGraph;
 		fVRPAnts = new ArrayList<Ant_VRP>();

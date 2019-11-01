@@ -93,7 +93,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				if (fPathsChecksum != lLocationResult.getDouble("Checksum"))
 				{
 					fPathsChecksum = lLocationResult.getDouble("Checksum");
-					Thread.sleep(50); // allow concurrent updates to occur
+					Thread.sleep(200); // allow concurrent updates to occur
 					updatePaths();
 				}
 			} 
@@ -146,7 +146,11 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 		// draw locations
 		gg.setColor( Color.BLACK );
-		fLocations.forEach( (lLocation) -> gg.fillRect( lLocation.x, lLocation.y, 10, 10 ) );
+		fLocations.forEach( (lLocation) ->
+		{
+			gg.fillRect( lLocation.x, lLocation.y, 10, 10 );
+			gg.drawString(String.valueOf(lLocation.getfLocationID()), lLocation.x, lLocation.y);
+		});
 
 		// draw depot
 		gg.setColor( Color.RED );
@@ -186,7 +190,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 
 			while (lLocationResult.next())
 			{
-				fLocations.add(new Location(lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
+				fLocations.add(new Location(lLocationResult.getInt("Location_ID"), lLocationResult.getInt("Pos_X"), lLocationResult.getInt("Pos_Y")));
 			}
 		}
 		catch (SQLException e) { e.printStackTrace(); }

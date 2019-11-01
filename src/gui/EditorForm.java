@@ -24,6 +24,7 @@ public class EditorForm extends JPanel
 	private TextField fLocations;
 	private TextField fVehicles;
 	private TextField fCapacity;
+	private TextField fACOIterations;
 	private TextField fSeed;
 	private JComboBox<String> fRoutingMethods;
 	private JCheckBox fCargoWeight;
@@ -136,9 +137,22 @@ public class EditorForm extends JPanel
 		lConstraints.gridwidth = 1;
 		this.add(fNormality, lConstraints);
 
-		fSubmit = new JButton("Submit");
 		lConstraints.gridx = 0;
 		lConstraints.gridy = 7;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(new JLabel("ACO Iterations:"), lConstraints);
+
+		fACOIterations = new TextField();
+		lConstraints.gridx = 1;
+		lConstraints.gridy = 8;
+		lConstraints.gridheight = 1;
+		lConstraints.gridwidth = 1;
+		this.add(fACOIterations, lConstraints);
+
+		fSubmit = new JButton("Submit");
+		lConstraints.gridx = 0;
+		lConstraints.gridy = 9;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fSubmit.addActionListener( e -> onSubmit( aRoutingFrame ) );
@@ -146,7 +160,7 @@ public class EditorForm extends JPanel
 
 		fDefaults = new JButton("Default");
 		lConstraints.gridx = 0;
-		lConstraints.gridy = 8;
+		lConstraints.gridy = 10;
 		lConstraints.gridheight = 1;
 		lConstraints.gridwidth = 2;
 		fDefaults.addActionListener( e -> onDefault( aRoutingFrame ) );
@@ -164,7 +178,8 @@ public class EditorForm extends JPanel
 				Integer.parseInt(fSeed.getText()), 
 				Integer.parseInt(fCapacity.getText()),
 				fCargoWeight.isSelected(),
-				fNormality.isSelected()
+				fNormality.isSelected(),
+				Integer.parseInt(fACOIterations.getText())
 			);
 			
 			//KMeans test = (new KMeans(lDataModel));

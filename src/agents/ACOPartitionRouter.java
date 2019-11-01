@@ -30,7 +30,7 @@ public class ACOPartitionRouter extends ACORouter
 			System.out.println("NULL");
 		}
 
-		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities());
+		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities(), fDataModel.getfIterations());
 		fDataModel = fGraph;
 
 		fVRPAnts = new ArrayList<Ant_VRP>();
@@ -139,6 +139,8 @@ public class ACOPartitionRouter extends ACORouter
 		for ( int t = 0; t < fIterations; t++ )
 		{
 			ConstructSolutions(ant_routes);
+
+			//overload, only look at locations for this specific vehicle
 			UpdateTrails(t);
 		}
 
@@ -203,6 +205,35 @@ public class ACOPartitionRouter extends ACORouter
 			if (counter >= input_routes.length)
 			{
 				counter = 0;
+			}
+		}
+	}
+
+	//prune the pheremone model
+	//if a value is too small is comparison to the largest value in the model, then these pheremone values are set to 0
+	@Override
+	public void UpdateTrails(Integer current_iteration)
+	{
+		float ratio = Float.valueOf((float) current_iteration)/((float) fIterations);
+
+		for (int i = 0; i < fGraph.numLocations(); i++)
+		{
+			float max_value = 0;
+			for (int j = 0; j < fGraph.numLocations(); j++)
+			{
+				if (fGraph.getPheremone(i, j) > max_value)
+				{
+					max_value = fGraph.getPheremone(i,j);
+				}
+			}
+
+			for (int j = 0; j < fGraph.numLocations(); j++)
+			{
+				//play around with this if statement
+				if (fGraph.getPheremone(i,j) * 2 < max_value * ratio && ant_routes[Integer.valueOf((fDataModel.numVehicles()  - 1) % (i + 1))].contains(j))
+				{
+					fGraph.updatePheremonePath(i,j, 0);
+				}
 			}
 		}
 	}

@@ -26,7 +26,7 @@ public class Location
 		y = aY;
 		fWeight = 0;
 
-		fLocationID = 0;
+		fLocationID = 4;
 
 		fDelivered = false;
 		fDeadline = null;

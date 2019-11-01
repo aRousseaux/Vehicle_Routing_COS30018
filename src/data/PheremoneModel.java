@@ -7,10 +7,10 @@ public class PheremoneModel extends DataModel
 {
 	private float[][] fPaths;
 
-	public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed)
+	public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int aIterations)
 	{
 		//FIX CAPACITY
-		super(aVehicleNumber, aNumLocations, aSeed, 1);
+		super(aVehicleNumber, aNumLocations, aSeed, 1, aIterations);
 
 		// pheremone level for each path between locations (i to j)
 		fPaths = new float[numLocations()][numLocations()];
@@ -23,10 +23,10 @@ public class PheremoneModel extends DataModel
 		}
 	}
 
-	public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int Capacity)
+	public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int Capacity, int aIterations)
 	{
 		//FIX CAPACITY
-		super(aVehicleNumber, aNumLocations, aSeed, Capacity);
+		super(aVehicleNumber, aNumLocations, aSeed, Capacity, aIterations);
 
 		// pheremone level for each path between locations (i to j)
 		fPaths = new float[numLocations()][numLocations()];
@@ -39,10 +39,10 @@ public class PheremoneModel extends DataModel
 		}
 	}
 
-    public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] Capacity)
+    public PheremoneModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] Capacity, int aIterations)
     {
         //FIX CAPACITY
-        super(aVehicleNumber, aNumLocations, aSeed, Capacity);
+        super(aVehicleNumber, aNumLocations, aSeed, Capacity, aIterations);
 
         // pheremone level for each path between locations (i to j)
         fPaths = new float[numLocations()][numLocations()];

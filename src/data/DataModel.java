@@ -12,6 +12,7 @@ public class DataModel
 	private List< Location > fLocations; // each location
 	private int fSeed;
 	private boolean fPackagesByWeight;
+	private int fIterations;
 
 	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity )
 	{
@@ -51,10 +52,56 @@ public class DataModel
 		fPackagesByWeight = false;
 	}
 
-	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight,  boolean aNormalDist)
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, int aIterations)
+	{
+		fVehicles = new ArrayList< Vehicle >();
+		fIterations = aIterations;
+		fSeed = aSeed;
+
+		// generate the vehicle representation
+		for ( int i = 0; i < aVehicleNumber; i ++ )
+		{
+			fVehicles.add( new Vehicle( i, aCapacity, 8 ) );
+		}
+
+		generateLocations( aNumLocations, aSeed );
+
+		// update distance matrix
+		calculateDistances();
+
+		fPackagesByWeight = false;
+	}
+
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] aCapacity, int aIterations)
 	{
 		fVehicles = new ArrayList< Vehicle >();
 		fSeed = aSeed;
+		fIterations = aIterations;
+
+		// generate the vehicle representation
+		for ( int i = 0; i < aVehicleNumber; i ++ )
+		{
+			fVehicles.add( new Vehicle( i, aCapacity[i], 8 ) );
+		}
+
+		generateLocations( aNumLocations, aSeed );
+
+		// update distance matrix
+		calculateDistances();
+
+		fPackagesByWeight = false;
+	}
+
+	public int getfIterations()
+	{
+		return fIterations;
+	}
+
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int aCapacity, Boolean aPackagesByWeight, boolean aNormalDist, int aIterations)
+	{
+		fVehicles = new ArrayList< Vehicle >();
+		fSeed = aSeed;
+		fIterations = aIterations;
 
 		// generate the vehicle representation
 		if ( aNormalDist )
@@ -82,10 +129,11 @@ public class DataModel
 		fPackagesByWeight = aPackagesByWeight;
 	}
 
-	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] aCapacity, Boolean aPackagesByWeight,  boolean aNormalDist)
+	public DataModel(int aVehicleNumber, int aNumLocations, int aSeed, int[] aCapacity, Boolean aPackagesByWeight,  boolean aNormalDist, int aIterations)
 	{
 		fVehicles = new ArrayList< Vehicle >();
 		fSeed = aSeed;
+		fIterations = aIterations;
 
 		for ( int i = 0; i < aVehicleNumber; i ++ )
 		{
