@@ -153,6 +153,58 @@ public class Ant
 		return false;
 	}
 
+	//finds the next locations for the ant, based on the input pheremone model and the remaining locatiosn in unvisited_locations
+	public boolean nextLocationFinal(PheremoneModel aModel)
+	{
+		Random lRandom = new Random();
+		int lMax = Math.round((int) getRandomHigh(aModel));
+		double lCrossoverValue;
+
+		if (lMax > 0)
+		{
+			lCrossoverValue = lRandom.nextInt(lMax);
+		}
+		else
+		{
+			lCrossoverValue = 0;
+		}
+
+		int lCurrentLocationID = fCurrentLocation.getfLocationID();
+		double lValues = 0;
+
+		int selected_index = 0;
+
+		if (fUnvisited.size() > 0)
+		{
+			for (int i = 0; i < fUnvisited.size(); i++)
+			{
+				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(i)] > fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(selected_index)])
+				{
+					selected_index = i;
+				}
+			}
+
+			fTotalDistance += fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(selected_index)];
+			fLocationMapping[lCurrentLocationID] = fUnvisited.get(selected_index).intValue();
+			fCurrentLocation = fDataModel.getLocation(fUnvisited.get(selected_index));
+
+			final int lSelectedIndex = selected_index;
+			fUnvisited.removeIf(n -> (n == fUnvisited.get(lSelectedIndex)));
+
+			if (fDataModel.numLocations() - fInitialLocationSize ==  fUnvisited.size())
+			{
+				fUnvisited.removeAll(fUnvisited);
+			}
+
+			return true;
+
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	//gets the sum of all the pheromone values * distances, for later use
 	public double getRandomHigh(PheremoneModel aModel)
 	{

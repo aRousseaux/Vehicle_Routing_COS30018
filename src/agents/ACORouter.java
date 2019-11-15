@@ -199,15 +199,15 @@ public class ACORouter extends GenericRouter
 		{
 			ConstructSolutions();
 			UpdateTrails(Integer.valueOf(t));
+		}
 
-			for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
+		for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
+		{
+			for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
 			{
-				for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
-				{
-					System.out.print(  fGraph.getPheremone(i, j) + ", ");
-				}
-				System.out.println();
+				System.out.print(  fGraph.getPheremone(i, j) + ", ");
 			}
+			System.out.println();
 		}
 
 		for ( Ant lAnts : fVRPAnts )

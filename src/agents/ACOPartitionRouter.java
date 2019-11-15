@@ -31,6 +31,7 @@ public class ACOPartitionRouter extends ACORouter
 			System.out.println("NULL");
 		}
 
+		fIterations = fDataModel.getfIterations();
 		fGraph = new PheremoneModel( fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities(), fDataModel.getfIterations());
 		fDataModel = fGraph;
 
@@ -154,7 +155,6 @@ public class ACOPartitionRouter extends ACORouter
 			System.out.println();
 		}
 
-
 		for ( Ant lAnts : fVRPAnts )
 		{
 			while (lAnts.nextLocation(fGraph))
@@ -167,11 +167,6 @@ public class ACOPartitionRouter extends ACORouter
 		for (int i = 0; i < return_array.length; i++)
 		{
 			return_array[i] = fVRPAnts.get(i).getPathArray();
-		}
-
-		for ( Ant lAnts : fVRPAnts )
-		{
-			System.out.println("Route: " + Arrays.toString(lAnts.fLocationMapping) + "| Distance: " + lAnts.getRouteLength());
 		}
 
 		return return_array;
@@ -204,7 +199,7 @@ public class ACOPartitionRouter extends ACORouter
 
 			}
 
-			fGraph = lAnts.updateModel(fGraph, 4);
+			fGraph = lAnts.updateModel(fGraph, 10);
 			lAnts.reset((ArrayList<Integer>) input_routes[counter].clone());
 
 			counter++;
@@ -236,9 +231,9 @@ public class ACOPartitionRouter extends ACORouter
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getPheremone(i,j) * 2 < max_value * ratio && ant_routes[Integer.valueOf((fDataModel.numVehicles()  - 1) % (i + 1))].contains(j))
+				if (fGraph.getPheremone(i,j) * 10 < max_value * ratio && ant_routes[Integer.valueOf((fDataModel.numVehicles()  - 1) % (i + 1))].contains(j))
 				{
-					fGraph.updatePheremonePath(i,j, 0);
+					//fGraph.updatePheremonePath(i,j, 0);
 				}
 			}
 		}

@@ -92,6 +92,72 @@ public class Ant_VRP extends Ant
 		return aAvalibleLocations;
 	}
 
+	public ArrayList<Integer> nextLocationFinal(PheremoneModel aModel, ArrayList<Integer> aAvalibleLocations)
+	{
+		Random lRand = new Random();
+		int lMax = Math.round((int) getRandomHigh(aModel, aAvalibleLocations));
+
+		double lRandomCrossoverValue;
+
+		if (lMax > 0)
+		{
+			lRandomCrossoverValue = lRand.nextInt(lMax);
+		}
+		else
+		{
+			lRandomCrossoverValue = 0;
+		}
+
+		int lCurrentLocationID = fCurrentLocation.getfLocationID();
+
+		if (aAvalibleLocations.toArray().length > 0)
+		{
+			int highest_index = 0;
+
+			for (int i = 0; i < aAvalibleLocations.toArray().length; i++)
+			{
+				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)] > fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(highest_index)])
+				{
+					highest_index = i;
+				}
+			}
+
+			fTotalDistance += fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(highest_index)];
+			fLocationMapping[lCurrentLocationID] = aAvalibleLocations.get(highest_index);
+
+			fCurrentLocation = fDataModel.getLocation(aAvalibleLocations.get(highest_index));
+
+			final int lSelectedIndex = highest_index;
+
+			aAvalibleLocations.removeIf(n -> (n == aAvalibleLocations.get(lSelectedIndex).intValue()));
+
+			if (fDataModel.numLocations() - fInitialLocationSize ==  aAvalibleLocations.size())
+			{
+				//not valid!
+				//aAvalibleLocations.removeAll(aAvalibleLocations);
+				return aAvalibleLocations;
+			}
+
+			//this might be the problem!!!!!
+			if (aAvalibleLocations.size() <= 1)
+			{
+				for (int j = 0; j < fLocationMapping.length; j++)
+				{
+					if (fLocationMapping[j] == 0)
+					{
+						//total_distance_travelled += fDataModel.getDistanceMatrix()[j][0];
+					}
+				}
+			}
+
+			return aAvalibleLocations;
+		}
+		else
+		{
+			return aAvalibleLocations;
+		}
+	}
+
 	public double getRandomHigh(PheremoneModel aModel, ArrayList<Integer> aAvalibleLocations)
 	{
 		double lMaxValue = 0;
