@@ -116,7 +116,7 @@ public class ACORouter extends GenericRouter
 
 			for (Ant_VRP lAnts : return_ants)
 			{
-				avalible_locations = lAnts.nextLocation(fGraph, avalible_locations);
+				avalible_locations = lAnts.nextLocationFinal(fGraph, avalible_locations);
 
 				total_distance += lAnts.fTotalDistance;
 			}

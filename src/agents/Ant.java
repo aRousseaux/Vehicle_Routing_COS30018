@@ -178,7 +178,7 @@ public class Ant
 		{
 			for (int i = 0; i < fUnvisited.size(); i++)
 			{
-				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(i)] > fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(selected_index)])
+				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(i)] < fDataModel.getDistanceMatrix()[lCurrentLocationID][fUnvisited.get(selected_index)])
 				{
 					selected_index = i;
 				}

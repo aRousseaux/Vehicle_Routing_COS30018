@@ -157,7 +157,7 @@ public class ACOPartitionRouter extends ACORouter
 
 		for ( Ant lAnts : fVRPAnts )
 		{
-			while (lAnts.nextLocation(fGraph))
+			while (lAnts.nextLocationFinal(fGraph))
 			{
 
 			}

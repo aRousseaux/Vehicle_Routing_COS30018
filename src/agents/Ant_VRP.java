@@ -116,7 +116,7 @@ public class Ant_VRP extends Ant
 
 			for (int i = 0; i < aAvalibleLocations.toArray().length; i++)
 			{
-				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)] > fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(highest_index)])
+				if (fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(i)] < fDataModel.getDistanceMatrix()[lCurrentLocationID][aAvalibleLocations.get(highest_index)])
 				{
 					highest_index = i;
 				}

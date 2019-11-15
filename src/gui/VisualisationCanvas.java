@@ -177,7 +177,8 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			gg.fillOval(fVehicles.get(i).x, fVehicles.get(i).y, 10, 10);
 		}
 
-		if (continue_path_update)
+		//if (continue_path_update)
+		if (true)
 		{
 			new Thread(new Runnable() {
 				public void run() {
