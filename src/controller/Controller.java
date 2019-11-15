@@ -30,7 +30,7 @@ public class Controller implements Runnable
 		fContainerCtrl = lRuntime.createMainContainer( lMainProfile );
 
 		// create database agent
-		try 
+		try
 		{
 			fDBAgentCtrl = fContainerCtrl.createNewAgent
 			(

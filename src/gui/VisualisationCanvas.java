@@ -32,6 +32,8 @@ public class VisualisationCanvas extends Canvas implements Runnable
 	private List<List<Integer>> fPaths; // list of paths referencing location id
 	private double fPathsChecksum;
 
+	private boolean continue_path_update;
+
 	public VisualisationCanvas()
 	{
 		// set canvas size
@@ -41,6 +43,8 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		fLocations = new ArrayList<Location>();
 		fVehicles = new ArrayList<Vehicle>();
 		fPaths = new ArrayList<List<Integer>>();
+
+		continue_path_update = true;
 
 		// connect to Database
 		try
@@ -173,6 +177,18 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			gg.fillOval(fVehicles.get(i).x, fVehicles.get(i).y, 10, 10);
 		}
 
+		if (continue_path_update)
+		{
+			new Thread(new Runnable() {
+				public void run() {
+					if (updatePaths() == fLocations.size())
+					{
+						continue_path_update = false;
+					}
+				}
+			}).start();
+		}
+		
 		// draw final image to the screen
 		g.drawImage( lBuffer, 0, 0, null );
 		gg.dispose();
@@ -225,7 +241,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		catch (SQLException e) { e.printStackTrace(); }
 	}
 
-	public void updatePaths()
+	public int updatePaths()
 	{
 		// update paths
 		try
@@ -247,5 +263,21 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			}
 		}
 		catch (SQLException e) { e.printStackTrace(); }
+
+		Statement TotalEntries = null;
+
+		try
+		{
+			TotalEntries = fDBConnection.createStatement();
+			ResultSet TotalEntriesResult = TotalEntries.executeQuery("SELECT COUNT(DISTINCT Location_ID) as TotalCount FROM agent_routes");
+
+			TotalEntriesResult.next();
+			return TotalEntriesResult.getInt("TotalCount");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
 	}
 }
