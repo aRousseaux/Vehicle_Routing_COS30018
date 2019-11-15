@@ -140,10 +140,10 @@ public class VisualisationCanvas extends Canvas implements Runnable
 			{
 				gg.drawLine
 				(
-					fLocations.get(fPaths.get(i).get(j)).x + 5, 
-					fLocations.get(fPaths.get(i).get(j)).y + 5,
-					fLocations.get(fPaths.get(i).get(j + 1)).x + 5, 
-					fLocations.get(fPaths.get(i).get(j + 1)).y + 5
+					fLocations.get(fPaths.get(i).get(j)).x,
+					fLocations.get(fPaths.get(i).get(j)).y,
+					fLocations.get(fPaths.get(i).get(j + 1)).x,
+					fLocations.get(fPaths.get(i).get(j + 1)).y
 				);
 			}
 		}
@@ -152,7 +152,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 		gg.setColor( Color.BLACK );
 		fLocations.forEach( (lLocation) ->
 		{
-			gg.fillRect( lLocation.x, lLocation.y, 10, 10 );
+			gg.fillRect( lLocation.x - 5, lLocation.y - 5, 10, 10 );
 			gg.drawString(String.valueOf(lLocation.getfLocationID()), lLocation.x, lLocation.y);
 		});
 
@@ -188,7 +188,7 @@ public class VisualisationCanvas extends Canvas implements Runnable
 				}
 			}).start();
 		}
-		
+
 		// draw final image to the screen
 		g.drawImage( lBuffer, 0, 0, null );
 		gg.dispose();

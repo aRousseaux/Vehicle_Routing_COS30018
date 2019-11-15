@@ -13,7 +13,7 @@ import java.util.List;
 public class ACORouter extends GenericRouter
 {
 	private static final long serialVersionUID = 1L;
-	public final int fIterations = 100;
+	public int fIterations;
 	public static int fNumAnts;
 	protected ArrayList<Integer> avalible_locations;
 	public List<Ant_VRP> fVRPAnts;
@@ -127,7 +127,7 @@ public class ACORouter extends GenericRouter
 		{
 			for (Ant jAnts : return_ants)
 			{
-				fGraph = jAnts.updateModel(fGraph, 2);
+				fGraph = jAnts.updateModel(fGraph, 4);
 
 				if (jAnts.fTotalDistance > 0)
 				{
@@ -170,7 +170,7 @@ public class ACORouter extends GenericRouter
 			for (int j = 0; j < fGraph.numLocations(); j++)
 			{
 				//play around with this if statement
-				if (fGraph.getPheremone(i,j) * 2 < max_value * ratio)
+				if (fGraph.getPheremone(i,j) * 10 < max_value * ratio)
 				{
 					fGraph.updatePheremonePath(i,j, 0);
 				}
@@ -181,6 +181,7 @@ public class ACORouter extends GenericRouter
 	public int[][] solveRoute(DataModel aDataModel, int aMaxRouteDistance)
 	{
 		fGraph = new PheremoneModel(fDataModel.numVehicles(), fDataModel.numLocations(), fDataModel.getfSeed(), fDataModel.getCapacities(), fDataModel.getfIterations());
+		fIterations = fDataModel.getfIterations();
 
 		fDataModel = fGraph;
 		fVRPAnts = new ArrayList<Ant_VRP>();
@@ -198,22 +199,21 @@ public class ACORouter extends GenericRouter
 		{
 			ConstructSolutions();
 			UpdateTrails(Integer.valueOf(t));
-		}
 
-        for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
-        {
-            for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
-            {
-                System.out.print(  fGraph.getPheremone(i, j) + ", ");
-            }
-            System.out.println();
-        }
+			for (int i = 0; i < fGraph.getDistanceMatrix().length; i++)
+			{
+				for (int j = 0 ; j < fGraph.getDistanceMatrix()[i].length; j++)
+				{
+					System.out.print(  fGraph.getPheremone(i, j) + ", ");
+				}
+				System.out.println();
+			}
+		}
 
 		for ( Ant lAnts : fVRPAnts )
 		{
 			System.out.println("Route: " + Arrays.toString(lAnts.fLocationMapping) + "| Distance: " + lAnts.getRouteLength());
 		}
-
 
 		return getSolutions();
 	}

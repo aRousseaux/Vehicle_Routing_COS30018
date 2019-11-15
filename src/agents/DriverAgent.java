@@ -22,7 +22,7 @@ public class DriverAgent extends Agent
 	private int fIdentification;
 
 	private int fLocationIndex;
-	private Point fPosition;
+	private Point.Double fPosition;
 	private int[] fRoute;
 
 	private AMSAgentDescription[] fAgents;
@@ -76,7 +76,7 @@ public class DriverAgent extends Agent
 
 						if (fPosition == null)
 						{
-							fPosition = new Point(fDataModel.getLocation(fRoute[0]).x, fDataModel.getLocation(fRoute[0]).y);
+							fPosition = new Point.Double(fDataModel.getLocation(fRoute[0]).x, fDataModel.getLocation(fRoute[0]).y);
 							System.out.println(fPosition.x + "|" + fPosition.y + "|" + this.myAgent.getLocalName());
 							fLocationIndex = 0;
 						}
