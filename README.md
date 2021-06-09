@@ -3,10 +3,7 @@ This will be the final project. Coding standards should be met, largely a refact
 
 ## Group Members
 * Alexander Rousseaux - 102098573
-* Michael Freemantle - 5347173
 * Timothy Keesman - 102120418
-* Jake Lucic - 2103435
-
 
 ## Getting Started
 ### Installing Eclipse
